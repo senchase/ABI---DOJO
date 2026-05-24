@@ -3,265 +3,325 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ABI - DOJO</title>
+<title>ABI · DOJO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Source+Code+Pro:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#8b6f47">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
+/* ─── TOKENS ─────────────────────────────────────── */
 :root {
-  --bg:    #f5f0e8;
-  --bg2:   #ede7d9;
-  --bg3:   #e4dcc8;
-  --bg4:   #d8cfb8;
-  --border:#c8bfa5;
-  --border2:#b8a88a;
-  --text:  #2c2416;
-  --text2: #6b5c42;
-  --text3: #9e8b6e;
-  --text4: #b8a888;
-  --accent:#8b6f47;
-  --accent2:#a88550;
-  --accent3:#c4a06a;
-  --gold:  #c8a84b;
-  --gold2: #e0c070;
-  --red:   #b85c4a;
-  --blue:  #4a7a8b;
-  --green: #5c8b6a;
-  --purple:#7a6a8b;
-  --warm:  #d4956a;
-  --sand:  #e8d8b8;
-  --stone: #a89878;
-
-  --font-display: 'Playfair Display', serif;
-  --font-mono:    'Source Code Pro', monospace;
-  --font-body:    'Lora', serif;
-  --shadow:       0 2px 12px rgba(139,111,71,0.12);
-  --shadow2:      0 4px 24px rgba(139,111,71,0.18);
-  --radius:       10px;
+  --bg:        #faf9f7;
+  --bg2:       #f4f2ee;
+  --bg3:       #ece8e1;
+  --surface:   #ffffff;
+  --border:    rgba(0,0,0,.08);
+  --border2:   rgba(0,0,0,.14);
+  --text:      #1a1714;
+  --text2:     #4a4540;
+  --text3:     #857d74;
+  --text4:     #b8b0a6;
+  --accent:    #c17c2e;
+  --accent-bg: rgba(193,124,46,.1);
+  --gold:      #e0a83a;
+  --gold-bg:   rgba(224,168,58,.12);
+  --red:       #c0392b;
+  --red-bg:    rgba(192,57,43,.08);
+  --green:     #27ae60;
+  --green-bg:  rgba(39,174,96,.1);
+  --blue:      #2980b9;
+  --blue-bg:   rgba(41,128,185,.1);
+  --radius:    12px;
+  --radius-sm: 8px;
+  --shadow:    0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+  --shadow2:   0 4px 24px rgba(0,0,0,.1);
+  --font-d:    'DM Serif Display', serif;
+  --font-b:    'DM Sans', sans-serif;
+  --font-m:    'DM Mono', monospace;
+  --sidebar-w: 220px;
+  --topbar-h:  56px;
+  color-scheme: light;
 }
-*{box-sizing:border-box;margin:0;padding:0}
+.dark {
+  --bg:        #111008;
+  --bg2:       #19170f;
+  --bg3:       #221f15;
+  --surface:   #1e1c12;
+  --border:    rgba(255,255,255,.07);
+  --border2:   rgba(255,255,255,.13);
+  --text:      #f0ece4;
+  --text2:     #c8c0b0;
+  --text3:     #887e6e;
+  --text4:     #5a5448;
+  --accent:    #d4903c;
+  --accent-bg: rgba(212,144,60,.12);
+  --gold:      #e8b840;
+  --gold-bg:   rgba(232,184,64,.1);
+  --red:       #e05050;
+  --red-bg:    rgba(224,80,80,.1);
+  --green:     #4acf78;
+  --green-bg:  rgba(74,207,120,.1);
+  --blue:      #5aabdf;
+  --blue-bg:   rgba(90,171,223,.1);
+  --shadow:    0 1px 3px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  --shadow2:   0 4px 24px rgba(0,0,0,.5);
+  color-scheme: dark;
+}
+
+/* ─── RESET ──────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:14px;line-height:1.5;transition:background .2s,color .2s}
 
-/* NOISE TEXTURE OVERLAY */
-body::before{content:'';position:fixed;inset:0;opacity:.025;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")}
+/* ─── LAYOUT ─────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;height:100vh}
 
-/* LAYOUT */
-.shell{display:grid;grid-template-columns:230px 1fr;grid-template-rows:60px 1fr;height:100vh}
-.topbar{grid-column:1/-1;background:var(--bg2);border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:10;box-shadow:var(--shadow)}
-.sidebar{background:var(--bg2);border-right:2px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding:16px 0;box-shadow:2px 0 12px rgba(139,111,71,.06)}
-.main{overflow-y:auto;padding:28px;background:var(--bg)}
+/* ─── TOPBAR ─────────────────────────────────────── */
+.topbar{
+  grid-column:1/-1;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 20px;gap:14px;
+  box-shadow:var(--shadow);
+  z-index:20;
+}
+.logo{font-family:var(--font-d);font-size:20px;color:var(--accent);letter-spacing:.5px;white-space:nowrap}
+.logo small{font-family:var(--font-b);font-size:11px;font-weight:400;color:var(--text3);margin-left:6px}
+.xp-wrap{flex:1;max-width:260px;margin-left:auto}
+.xp-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--font-m);margin-bottom:4px}
+.xp-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:2px;transition:width .5s ease}
+.top-pill{display:flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;font-family:var(--font-m);font-size:13px;white-space:nowrap}
+.top-pill .val{color:var(--gold);font-weight:500}
+.streak-active{color:var(--accent)!important}
+.streak-warn{color:var(--red)!important;animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-icon{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;transition:all .15s;flex-shrink:0}
+.btn-icon:hover{background:var(--bg3);color:var(--text)}
 
-/* TOPBAR */
-.logo{font-family:var(--font-display);font-weight:900;font-size:21px;color:var(--accent);letter-spacing:1px}
-.logo span{color:var(--text3);font-size:12px;font-weight:400;font-family:var(--font-body);margin-left:6px}
-.xp-bar-wrap{flex:1;max-width:280px;margin-left:auto}
-.xp-level{font-family:var(--font-mono);font-size:11px;color:var(--accent2);margin-bottom:4px;display:flex;justify-content:space-between}
-.xp-bar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
-.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:3px;transition:width .6s ease}
-.top-tokens{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:6px 14px;margin-left:12px;box-shadow:var(--shadow)}
-.top-tokens .tok-val{font-family:var(--font-mono);color:var(--gold);font-size:16px;font-weight:600}
-.top-streak{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:13px;color:var(--warm);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px}
-.streak-danger{color:var(--red)!important;border-color:var(--red)!important;animation:pulse 1.5s infinite}
+/* ─── SIDEBAR ────────────────────────────────────── */
+.sidebar{
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;padding:12px 0 20px;
+  box-shadow:var(--shadow);
+}
+.nav-sect{padding:16px 16px 4px;font-size:10px;color:var(--text4);letter-spacing:2px;text-transform:uppercase;font-family:var(--font-m);font-weight:500}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 16px;cursor:pointer;
+  color:var(--text2);font-size:13px;font-weight:400;
+  border-left:2.5px solid transparent;
+  transition:all .12s;
+}
+.nav-item:hover{color:var(--text);background:var(--bg2)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-bg);font-weight:500}
+.nav-item .ni{font-size:16px;width:20px;text-align:center;opacity:.8}
+.nav-div{margin:6px 16px;border:none;border-top:1px solid var(--border)}
 
-/* SIDEBAR NAV */
-.nav-section{padding:4px 16px;font-size:10px;color:var(--text4);letter-spacing:2px;margin-top:14px;margin-bottom:4px;text-transform:uppercase;font-family:var(--font-mono)}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;color:var(--text2);font-size:13px;border-left:3px solid transparent;transition:all .15s;font-family:var(--font-body)}
-.nav-item:hover{color:var(--text);background:var(--bg3)}
-.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(139,111,71,.08);font-weight:600}
-.nav-item .icon{font-size:15px;width:20px;text-align:center}
-.nav-divider{margin:8px 16px;border:none;border-top:1px solid var(--border)}
-
-/* PAGES */
+/* ─── MAIN ───────────────────────────────────────── */
+.main{overflow-y:auto;padding:24px;background:var(--bg)}
 .page{display:none}
 .page.active{display:block}
 
-/* PAGE HEADER */
-.page-header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.page-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text);letter-spacing:.5px}
-.page-sub{font-size:12px;color:var(--text3);margin-top:4px;font-style:italic}
+/* ─── PAGE HEADER ────────────────────────────────── */
+.ph{margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ph-left h1{font-family:var(--font-d);font-size:22px;font-weight:400;color:var(--text);letter-spacing:.3px}
+.ph-left p{font-size:12px;color:var(--text3);margin-top:3px;font-style:italic}
 
-/* TIMETABLE */
-.tt-grid{display:grid;grid-template-columns:52px repeat(5,1fr);gap:2px;background:var(--border);border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
-.tt-head{background:var(--bg3);padding:8px 4px;text-align:center;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px;font-family:var(--font-mono)}
-.tt-time{background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;color:var(--text3);padding:4px 2px;line-height:1.5;white-space:pre;text-align:center}
-.tt-slot{min-height:58px;border-radius:0;cursor:pointer;display:flex;flex-direction:column;justify-content:center;padding:6px 7px;border:none;background:var(--bg2);transition:all .15s;position:relative}
-.tt-slot:hover{background:var(--bg3)}
-.tt-slot.filled:hover{filter:brightness(.95)}
-.tt-slot-name{font-size:11px;font-weight:700;line-height:1.3;font-family:var(--font-body)}
-.tt-slot-note{font-size:10px;opacity:.7;margin-top:2px;line-height:1.3}
-.tt-slot-del{position:absolute;top:3px;right:4px;background:none;border:none;cursor:pointer;color:inherit;opacity:0;font-size:12px;padding:0;transition:opacity .15s}
-.tt-slot:hover .tt-slot-del{opacity:.5}
+/* ─── CARDS ──────────────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.card-title{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;font-family:var(--font-m);margin-bottom:12px}
+
+/* ─── GRIDS ──────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+
+/* ─── STAT CARDS ─────────────────────────────────── */
+.sc{background:transparent;border:none;border-radius:var(--radius);padding:14px 16px;text-align:center;box-shadow:none}
+.sc-n{font-family:var(--font-m);font-size:24px;color:var(--text);font-weight:500}
+.sc-l{font-size:10px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.sc-s{font-size:11px;color:var(--text4);margin-top:2px}
+
+/* ─── BUTTONS ────────────────────────────────────── */
+.btn{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;cursor:pointer;color:var(--text);font-family:var(--font-b);display:inline-flex;align-items:center;gap:6px;transition:all .12s;font-weight:400}
+.btn:hover{background:var(--bg3)}
+.btn-gold{background:var(--gold-bg);border-color:var(--gold);color:var(--accent)}
+.btn-gold:hover{background:rgba(224,168,58,.22)}
+.btn-red{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.btn-red:hover{background:rgba(192,57,43,.16)}
+.btn-green{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* ─── STUNDENPLAN ────────────────────────────────── */
+.tt{display:grid;grid-template-columns:56px repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.tt-head{background:var(--bg2);padding:8px 4px;text-align:center;font-size:10px;font-weight:600;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m)}
+.tt-time{background:var(--bg2);font-family:var(--font-m);font-size:9px;color:var(--text3);padding:4px 3px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.6;white-space:pre}
+.tt-slot{min-height:60px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;justify-content:center;padding:6px 8px;position:relative;transition:background .12s}
+.tt-slot:hover{background:var(--bg2)}
+.tt-slot.filled:hover{filter:brightness(.97)}
+.dark .tt-slot.filled:hover{filter:brightness(1.05)}
+.tt-slot-name{font-size:11px;font-weight:500;line-height:1.3}
+.tt-slot-note{font-size:10px;opacity:.65;margin-top:2px;line-height:1.3}
+.tt-slot-del{position:absolute;top:4px;right:5px;background:none;border:none;cursor:pointer;color:inherit;opacity:0;font-size:11px;padding:0;line-height:1}
+.tt-slot:hover .tt-slot-del{opacity:.45}
 .tt-slot-del:hover{opacity:1!important}
-.tt-add-icon{font-size:16px;color:var(--border2);margin:auto;text-align:center;display:block;opacity:.5}
+.tt-add{font-size:18px;color:var(--border2);margin:auto;opacity:.4}
+.tt-pause{background:var(--bg2);display:flex;align-items:center;justify-content:center}
+.tt-pause-lbl{font-size:9px;color:var(--green);opacity:.5;font-family:var(--font-m);letter-spacing:1px}
 
-/* CARDS */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-.card-title{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-family:var(--font-mono)}
+/* ─── FACH COLORS ────────────────────────────────── */
+.fc-Mathematik{background:rgba(41,128,185,.1);border-left:3px solid rgba(41,128,185,.6);color:#1a5e8a}
+.fc-Physik{background:rgba(122,106,180,.1);border-left:3px solid rgba(122,106,180,.6);color:#5a4a90}
+.fc-Chemie{background:rgba(192,57,43,.1);border-left:3px solid rgba(192,57,43,.6);color:#a03020}
+.fc-Deutsch{background:rgba(224,168,58,.12);border-left:3px solid rgba(224,168,58,.7);color:#8a6018}
+.fc-Englisch{background:rgba(39,174,96,.1);border-left:3px solid rgba(39,174,96,.6);color:#1a7040}
+.fc-Latein{background:rgba(193,124,46,.12);border-left:3px solid rgba(193,124,46,.6);color:#7a4e18}
+.fc-Geschichte{background:rgba(149,100,70,.1);border-left:3px solid rgba(149,100,70,.6);color:#6a4020}
+.fc-PGW{background:rgba(22,160,133,.1);border-left:3px solid rgba(22,160,133,.6);color:#0a6a58}
+.fc-Biologie{background:rgba(46,204,113,.1);border-left:3px solid rgba(46,204,113,.6);color:#1a8040}
+.fc-Informatik{background:rgba(52,73,94,.1);border-left:3px solid rgba(52,73,94,.6);color:#2a4060}
+.dark .fc-Mathematik{color:#7ab8e0}
+.dark .fc-Physik{color:#b0a0e8}
+.dark .fc-Chemie{color:#e07868}
+.dark .fc-Deutsch{color:#e0c060}
+.dark .fc-Englisch{color:#68d08a}
+.dark .fc-Latein{color:#d09050}
+.dark .fc-Geschichte{color:#c09070}
+.dark .fc-PGW{color:#50c8a8}
+.dark .fc-Biologie{color:#70e890}
+.dark .fc-Informatik{color:#80a0c0}
 
-/* GRIDS */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.fbg-Mathematik{background:#2980b9}
+.fbg-Physik{background:#7a6ab4}
+.fbg-Chemie{background:#c0392b}
+.fbg-Deutsch{background:#d4a017}
+.fbg-Englisch{background:#27ae60}
+.fbg-Latein{background:#c17c2e}
+.fbg-Geschichte{background:#956446}
+.fbg-PGW{background:#16a085}
+.fbg-Biologie{background:#2ecc71}
+.fbg-Informatik{background:#34495e}
 
-/* STAT CARD */
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow)}
-.stat-n{font-family:var(--font-mono);font-size:26px;color:var(--accent);font-weight:600}
-.stat-l{font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
-.stat-sub{font-size:11px;color:var(--text4);margin-top:2px}
+/* ─── TIMER ──────────────────────────────────────── */
+.timer-display{font-family:var(--font-m);font-size:64px;font-weight:500;color:var(--text);letter-spacing:3px;text-align:center;line-height:1}
+.timer-label{text-align:center;font-size:13px;color:var(--text3);margin-top:6px;margin-bottom:18px;font-style:italic}
+.timer-track{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:18px}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:2px;transition:width 1s linear}
+.timer-pips{display:flex;gap:5px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
+.pip{width:32px;height:6px;border-radius:3px;background:var(--bg3);border:1px solid var(--border)}
+.pip.l-done{background:var(--accent)}
+.pip.l-active{background:var(--accent);animation:pulse 1.4s infinite}
+.pip.p-done{background:var(--green)}
+.pip.p-active{background:var(--green);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* TIMER */
-.timer-big{font-family:var(--font-mono);font-size:64px;font-weight:600;color:var(--text);letter-spacing:4px;text-align:center;line-height:1}
-.timer-block-name{text-align:center;font-size:13px;color:var(--text2);margin-top:8px;margin-bottom:20px;font-style:italic}
-.timer-progress{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:20px;border:1px solid var(--border)}
-.timer-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:2px;transition:width 1s linear}
-.timer-blocks{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
-.timer-pip{width:36px;height:7px;border-radius:4px;background:var(--bg4);border:1px solid var(--border)}
-.timer-pip.learn-done{background:var(--accent)}
-.timer-pip.learn-active{background:var(--accent);animation:pulse 1.5s infinite}
-.timer-pip.pause-done{background:var(--green)}
-.timer-pip.pause-active{background:var(--green);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* ─── BADGES ─────────────────────────────────────── */
+.badges-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.badge{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:all .18s}
+.badge.unlocked{border-color:var(--gold);background:var(--gold-bg)}
+.badge.locked{filter:grayscale(1);opacity:.28}
+.badge-icon{font-size:28px;margin-bottom:6px}
+.badge-name{font-size:10px;font-weight:600;color:var(--text);font-family:var(--font-m);letter-spacing:.5px}
+.badge-req{font-size:9px;color:var(--text3);margin-top:3px;line-height:1.35}
 
-/* BUTTONS */
-.btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 20px;font-size:13px;cursor:pointer;color:var(--text);font-family:var(--font-body);display:inline-flex;align-items:center;gap:7px;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.btn:hover{background:var(--bg4);color:var(--text)}
-.btn-gold{background:rgba(200,168,75,.15);border-color:var(--gold);color:var(--accent2)}
-.btn-gold:hover{background:rgba(200,168,75,.28)}
-.btn-red{background:rgba(184,92,74,.1);border-color:var(--red);color:var(--red)}
-.btn-red:hover{background:rgba(184,92,74,.2)}
-.btn-green{background:rgba(92,139,106,.1);border-color:var(--green);color:var(--green)}
-.btn-green:hover{background:rgba(92,139,106,.2)}
-.btn-sm{padding:5px 12px;font-size:12px}
-.btn-row{display:flex;gap:8px;justify-content:center}
+/* ─── HEFTE ──────────────────────────────────────── */
+.heft{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.heft-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.fach-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;font-family:var(--font-m)}
+.heft-bar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.heft-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.heft-stats{display:flex;justify-content:space-between;font-family:var(--font-m);font-size:10px;color:var(--text3)}
 
-/* BADGES */
-.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
-.badge-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:all .2s}
-.badge-card.unlocked{border-color:var(--gold);background:rgba(200,168,75,.08);box-shadow:0 2px 12px rgba(200,168,75,.15)}
-.badge-card.locked{filter:grayscale(1);opacity:.35}
-.badge-icon{font-size:30px;margin-bottom:6px}
-.badge-name{font-size:11px;font-weight:700;color:var(--accent);font-family:var(--font-mono)}
-.badge-card.locked .badge-name{color:var(--text3)}
-.badge-req{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3}
+/* ─── GRADES ─────────────────────────────────────── */
+.grade-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.grade-tbl th{background:var(--bg2);padding:8px 12px;font-size:10px;font-family:var(--font-m);font-weight:600;color:var(--text2);text-align:left;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
+.grade-tbl td{padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface);vertical-align:middle}
+.grade-tbl tr:hover td{background:var(--bg2)}
+.gchip{display:inline-block;padding:2px 9px;border-radius:20px;font-family:var(--font-m);font-size:11px;font-weight:600}
+.g1{background:rgba(39,174,96,.15);color:#1a7040}.g2{background:rgba(41,128,185,.15);color:#1a5080}.g3{background:rgba(224,168,58,.15);color:#7a5a10}.g4{background:rgba(193,124,46,.15);color:#7a4010}.g5{background:rgba(192,57,43,.15);color:#8a2010}.g6{background:rgba(100,20,20,.15);color:#6a1010}
+.dark .g1{color:#60e890}.dark .g2{color:#70b8f0}.dark .g3{color:#e8c860}.dark .g4{color:#e09050}.dark .g5{color:#f06850}.dark .g6{color:#e04040}
 
-/* HEFTE */
-.heft-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
-.heft-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.heft-name{font-size:13px;font-weight:700;flex:1;font-family:var(--font-body)}
-.heft-fach-tag{font-size:10px;padding:2px 9px;border-radius:99px;font-weight:700;font-family:var(--font-mono)}
-.heft-progress{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border)}
-.heft-progress-fill{height:100%;border-radius:3px;transition:width .4s}
-.heft-stats{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:var(--text3)}
-
-/* TOKENS/REWARDS */
-.reward-item{display:flex;align-items:center;gap:14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
-.reward-cost{font-family:var(--font-mono);font-size:17px;color:var(--gold);font-weight:700;min-width:56px;text-align:center}
-.reward-name{font-size:13px;font-weight:700;flex:1;font-family:var(--font-body)}
-.reward-desc{font-size:11px;color:var(--text3);margin-top:2px;font-style:italic}
-
-/* NOTES / GRADES */
-.grade-table{width:100%;border-collapse:collapse}
-.grade-table th{background:var(--bg3);padding:9px 12px;font-size:11px;font-family:var(--font-mono);font-weight:600;color:var(--text2);text-align:left;border-bottom:2px solid var(--border);letter-spacing:.5px;text-transform:uppercase}
-.grade-table td{padding:9px 12px;font-size:13px;border-bottom:1px solid var(--border);background:var(--bg2)}
-.grade-table tr:hover td{background:var(--bg3)}
-.grade-chip{display:inline-block;padding:2px 10px;border-radius:99px;font-family:var(--font-mono);font-size:12px;font-weight:700}
-.grade-1{background:rgba(92,139,106,.2);color:#3d7a52}
-.grade-2{background:rgba(74,122,139,.2);color:#3a7a8b}
-.grade-3{background:rgba(200,168,75,.2);color:#9a7820}
-.grade-4{background:rgba(212,149,106,.2);color:#9a6030}
-.grade-5{background:rgba(184,92,74,.2);color:#b85c4a}
-.grade-6{background:rgba(120,40,40,.2);color:#8b3030}
-
-/* CALENDAR */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-head{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-align:center;padding:4px;letter-spacing:1px}
-.cal-day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;min-height:70px;padding:5px;cursor:pointer;transition:all .15s;position:relative}
-.cal-day:hover{background:var(--bg4);border-color:var(--border2)}
-.cal-day.today{border-color:var(--accent);background:rgba(139,111,71,.1)}
-.cal-day.other-month{opacity:.35}
-.cal-day.has-event::after{content:'';position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
-.cal-day.learned::before{content:'';position:absolute;bottom:4px;left:4px;width:6px;height:6px;border-radius:50%;background:var(--green)}
-.cal-day-num{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text2);margin-bottom:3px}
-.cal-event-chip{font-size:9px;padding:1px 4px;border-radius:3px;background:var(--accent);color:#fff;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+/* ─── KALENDER ───────────────────────────────────── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-head{font-family:var(--font-m);font-size:9px;color:var(--text3);text-align:center;padding:4px;letter-spacing:1px;text-transform:uppercase}
+.cal-day{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);min-height:66px;padding:5px;cursor:pointer;transition:all .12s;position:relative;overflow:hidden}
+.cal-day:hover{background:var(--bg2);border-color:var(--border2)}
+.cal-day.today{border-color:var(--accent);background:var(--accent-bg)}
+.cal-day.other-month{opacity:.28}
+.cal-day.learned::after{content:'';position:absolute;bottom:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--green)}
+.cal-day-num{font-family:var(--font-m);font-size:10px;font-weight:500;color:var(--text2);margin-bottom:2px}
+.cal-chip{font-size:8px;padding:1px 4px;border-radius:3px;background:var(--accent);color:#fff;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.cal-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text)}
+.cal-title{font-family:var(--font-d);font-size:18px;color:var(--text)}
 
-/* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(44,36,22,.5);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:26px;width:380px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2)}
-.modal-title{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--accent);margin-bottom:20px;letter-spacing:.5px}
-.field{margin-bottom:14px}
-.field label{font-size:10px;color:var(--text3);display:block;margin-bottom:5px;letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-mono)}
-.field input,.field select,.field textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:9px 12px;font-size:13px;color:var(--text);font-family:var(--font-body);outline:none;transition:border-color .15s}
+/* ─── REWARDS ────────────────────────────────────── */
+.reward{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;box-shadow:var(--shadow)}
+.reward-cost{font-family:var(--font-m);font-size:16px;color:var(--gold);font-weight:600;min-width:52px;text-align:center}
+.reward-name{font-size:13px;font-weight:500;flex:1}
+.reward-desc{font-size:11px;color:var(--text3);margin-top:1px;font-style:italic}
+
+/* ─── MODAL ──────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(6px)}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:24px;width:360px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2)}
+.modal-title{font-family:var(--font-d);font-size:20px;color:var(--accent);margin-bottom:18px}
+.field{margin-bottom:12px}
+.field label{font-size:10px;color:var(--text3);display:block;margin-bottom:4px;letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m)}
+.field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;color:var(--text);font-family:var(--font-b);outline:none;transition:border-color .12s}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
-.field select option{background:var(--bg3)}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.field select option{background:var(--bg2);color:var(--text)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 
-/* TOAST */
-.toast{background:var(--bg2);border:1px solid var(--border2);border-left:4px solid var(--gold);border-radius:10px;padding:14px 18px;z-index:300;animation:slideIn .3s ease;min-width:220px;box-shadow:var(--shadow2)}
-@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
-.toast-title{font-family:var(--font-display);font-size:14px;color:var(--accent);font-weight:700}
-.toast-msg{font-size:12px;color:var(--text2);margin-top:4px;font-style:italic}
+/* ─── TOAST ──────────────────────────────────────── */
+.toast{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--gold);border-radius:10px;padding:12px 16px;animation:slideIn .25s ease;box-shadow:var(--shadow2);min-width:200px}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast-title{font-family:var(--font-d);font-size:13px;color:var(--accent)}
+.toast-msg{font-size:11px;color:var(--text2);margin-top:3px;font-style:italic}
 
-/* STREAK WARNING */
-.streak-warn-bar{background:rgba(184,92,74,.12);border:1px solid rgba(184,92,74,.4);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--red);display:none;align-items:center;gap:8px}
+/* ─── WARN BAR ───────────────────────────────────── */
+.warn-bar{background:var(--red-bg);border:1px solid rgba(192,57,43,.3);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--red);display:none;align-items:center;gap:8px}
 
-/* FACH COLORS (warm earth tones) */
-.fach-Mathematik{background:rgba(74,122,139,.15);border-color:rgba(74,122,139,.4);color:#3a7a9a}
-.fach-Physik{background:rgba(122,106,139,.15);border-color:rgba(122,106,139,.4);color:#7a6a9a}
-.fach-Chemie{background:rgba(184,92,74,.15);border-color:rgba(184,92,74,.4);color:#b86a58}
-.fach-Deutsch{background:rgba(200,168,75,.15);border-color:rgba(200,168,75,.4);color:#9a7c28}
-.fach-Englisch{background:rgba(92,139,106,.15);border-color:rgba(92,139,106,.4);color:#4a8a62}
-.fach-Latein{background:rgba(212,149,106,.15);border-color:rgba(212,149,106,.4);color:#a0703a}
-.fach-Geschichte{background:rgba(160,120,90,.15);border-color:rgba(160,120,90,.4);color:#8a6040}
-.fach-PGW{background:rgba(90,150,168,.15);border-color:rgba(90,150,168,.4);color:#3a8aaa}
-.fach-Biologie{background:rgba(80,130,80,.15);border-color:rgba(80,130,80,.4);color:#3a7a3a}
-.fach-Informatik{background:rgba(80,100,140,.15);border-color:rgba(80,100,140,.4);color:#4a6a9a}
+/* ─── LEVEL PATH ─────────────────────────────────── */
+.lv-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+.lv-row.locked{opacity:.28}
 
-.fach-bg-Mathematik{background:#4a7a8b}
-.fach-bg-Physik{background:#7a6a8b}
-.fach-bg-Chemie{background:#b86050}
-.fach-bg-Deutsch{background:#b89030}
-.fach-bg-Englisch{background:#5a8b6a}
-.fach-bg-Latein{background:#c88040}
-.fach-bg-Geschichte{background:#9a7050}
-.fach-bg-PGW{background:#5a9ab4}
-.fach-bg-Biologie{background:#5a8a5a}
-.fach-bg-Informatik{background:#5a6a9a}
+/* ─── CONTINUITY ─────────────────────────────────── */
+.cont-dot{width:10px;height:10px;border-radius:2px;display:inline-block}
 
-/* LEVEL PATH */
-.level-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
-.level-row.reached{opacity:1}
-.level-row.locked{opacity:.3}
-.level-row.current-level .lv-title{color:var(--accent);font-weight:700}
+/* ─── MINI BAR CHART ─────────────────────────────── */
+.mbc{display:flex;gap:3px;align-items:flex-end;height:64px;margin-top:8px}
+.mbc-col{flex:1;display:flex;flex-direction:column;align-items:center}
+.mbc-bar{width:100%;border-radius:3px 3px 0 0;min-height:2px;transition:height .4s}
+.mbc-lbl{font-size:9px;color:var(--text3);margin-top:3px;font-family:var(--font-m)}
 
-/* STATS CHART BARS */
-.mini-bar-wrap{display:flex;gap:4px;align-items:flex-end;height:60px;margin-top:8px}
-.mini-bar{flex:1;background:var(--accent);border-radius:3px 3px 0 0;opacity:.7;min-height:2px;transition:height .4s}
-.mini-bar-label{font-size:9px;color:var(--text3);text-align:center;margin-top:3px;font-family:var(--font-mono)}
+/* ─── PROGRESS RINGS ─────────────────────────────── */
+.fernabi-prog{display:flex;align-items:center;gap:16px;padding:12px;background:var(--bg2);border-radius:var(--radius-sm);margin-bottom:8px}
+.prog-ring svg{transform:rotate(-90deg)}
+.prog-ring-bg{fill:none;stroke:var(--bg3);stroke-width:4}
+.prog-ring-fill{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
+/* ─── SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-/* SEPARATOR LINE */
-hr.sep{border:none;border-top:1px solid var(--border);margin:16px 0}
-
-/* RESPONSIVE */
-@media(max-width:760px){
-  .shell{grid-template-columns:1fr;grid-template-rows:56px auto 1fr}
-  .sidebar{flex-direction:row;overflow-x:auto;padding:0;border-right:none;border-bottom:2px solid var(--border)}
-  .nav-section,.nav-divider{display:none}
-  .nav-item{padding:14px 10px;border-left:none;border-bottom:3px solid transparent;white-space:nowrap;font-size:12px}
+/* ─── RESPONSIVE ─────────────────────────────────── */
+@media(max-width:720px){
+  .shell{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 44px 1fr}
+  .sidebar{flex-direction:row;overflow-x:auto;padding:0;border-right:none;border-bottom:1px solid var(--border)}
+  .nav-sect,.nav-div{display:none}
+  .nav-item{padding:12px 10px;border-left:none;border-bottom:2.5px solid transparent;white-space:nowrap;font-size:12px}
   .nav-item.active{border-left-color:transparent;border-bottom-color:var(--accent)}
-  .grid3{grid-template-columns:1fr 1fr}
-  .grid4{grid-template-columns:1fr 1fr}
-  .timer-big{font-size:44px}
-  .main{padding:16px}
+  .g3{grid-template-columns:1fr 1fr}
+  .g4{grid-template-columns:1fr 1fr}
+  .timer-display{font-size:44px}
+  .main{padding:14px}
+  .tt{min-width:500px}
+  .logo small{display:none}
 }
+hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
 </style>
 </head>
 <body>
@@ -269,96 +329,91 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:16px 0}
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <div class="logo">ABI · DOJO <span>道場</span></div>
-  <div class="xp-bar-wrap">
-    <div class="xp-level">
-      <span id="topLevelTitle">Novize</span>
-      <span id="topXpLabel">0 / 100 XP</span>
+  <div class="logo">ABI · DOJO <small>道場</small></div>
+  <div class="xp-wrap">
+    <div class="xp-label">
+      <span id="topLvlTitle">Novize</span>
+      <span id="topXpLbl">0 / 100 XP</span>
     </div>
-    <div class="xp-bar"><div class="xp-fill" id="topXpFill" style="width:0%"></div></div>
+    <div class="xp-track"><div class="xp-fill" id="topXpFill" style="width:0%"></div></div>
   </div>
-  <div class="top-streak" id="streakDisp" title="Tages-Streak">🔥 <span id="topStreak">0</span></div>
-  <div class="top-tokens">🪙 <span class="tok-val" id="topTokens">0</span></div>
+  <div class="top-pill" id="streakPill">🔥 <span id="topStreak" class="val">0</span></div>
+  <div class="top-pill">🪙 <span id="topTokens" class="val">0</span></div>
+  <button class="btn-icon" id="darkToggle" title="Dark / Light Mode">🌙</button>
 </header>
 
 <!-- SIDEBAR -->
 <nav class="sidebar">
-  <div class="nav-section">Lernen</div>
-  <div class="nav-item active" data-page="stundenplan"><span class="icon">📅</span> Stundenplan</div>
-  <div class="nav-item" data-page="timer"><span class="icon">⏱</span> Timer</div>
-  <div class="nav-item" data-page="kalender"><span class="icon">🗓</span> Kalender</div>
-  <div class="nav-item" data-page="hefte"><span class="icon">📓</span> Hefte</div>
-  <div class="nav-item" data-page="noten"><span class="icon">📊</span> Noten</div>
-  <hr class="nav-divider"/>
-  <div class="nav-section">Fortschritt</div>
-  <div class="nav-item" data-page="statistik"><span class="icon">📈</span> Statistik</div>
-  <div class="nav-item" data-page="xp"><span class="icon">⚡</span> XP & Level</div>
-  <div class="nav-item" data-page="badges"><span class="icon">🏅</span> Badges</div>
-  <div class="nav-item" data-page="tokens"><span class="icon">🪙</span> Belohnungen</div>
-  <hr class="nav-divider"/>
-  <div class="nav-section">System</div>
-  <div class="nav-item" data-page="setup"><span class="icon">⚙️</span> Einrichten</div>
+  <div class="nav-sect">Lernen</div>
+  <div class="nav-item active" data-page="stundenplan"><span class="ni">📅</span>Stundenplan</div>
+  <div class="nav-item" data-page="timer"><span class="ni">⏱</span>Timer</div>
+  <div class="nav-item" data-page="kalender"><span class="ni">🗓</span>Kalender</div>
+  <div class="nav-item" data-page="hefte"><span class="ni">📓</span>Hefte</div>
+  <div class="nav-item" data-page="noten"><span class="ni">📊</span>Noten</div>
+  <hr class="nav-div"/>
+  <div class="nav-sect">Fortschritt</div>
+  <div class="nav-item" data-page="fernabi"><span class="ni">🎯</span>Fernabi-Plan</div>
+  <div class="nav-item" data-page="statistik"><span class="ni">📈</span>Statistik</div>
+  <div class="nav-item" data-page="xp"><span class="ni">⚡</span>XP & Level</div>
+  <div class="nav-item" data-page="badges"><span class="ni">🏅</span>Badges</div>
+  <div class="nav-item" data-page="tokens"><span class="ni">🪙</span>Belohnungen</div>
+  <hr class="nav-div"/>
+  <div class="nav-sect">System</div>
+  <div class="nav-item" data-page="setup"><span class="ni">⚙️</span>Einstellungen</div>
 </nav>
 
 <!-- MAIN -->
 <main class="main">
 
-<!-- ===== STUNDENPLAN ===== -->
+<!-- STUNDENPLAN -->
 <div class="page active" id="page-stundenplan">
-  <div class="page-header">
-    <div class="page-title">Stundenplan</div>
-    <div class="page-sub">Wochenübersicht · Klick auf ein Feld zum Bearbeiten</div>
+  <div class="ph">
+    <div class="ph-left">
+      <h1>Stundenplan</h1>
+      <p>Wochenübersicht · Klick auf ein Feld zum Bearbeiten</p>
+    </div>
   </div>
-  <div id="streakWarn" class="streak-warn-bar">
-    ⚠️ <strong>Achtung:</strong> Du hast gestern nicht gelernt – dein Streak wird heute zurückgesetzt wenn du nicht lernst!
+  <div id="streakWarn" class="warn-bar">⚠️ <strong>Achtung:</strong> Heute noch nichts gelernt – Streak gefährdet!</div>
+  <div style="overflow-x:auto;margin-bottom:16px">
+    <div class="tt" id="ttGrid" style="min-width:500px"></div>
   </div>
-  <div style="overflow-x:auto">
-    <div class="tt-grid" id="ttGrid" style="min-width:520px"></div>
-  </div>
-  <!-- ESA Kalender mini -->
-  <div class="card" style="margin-top:20px">
-    <div class="card-title">Nächste ESA-Termine</div>
+  <div class="card">
+    <div class="card-title">Nächste Prüfungen & ESAs</div>
     <div id="esaMini"></div>
   </div>
 </div>
 
-<!-- ===== TIMER ===== -->
+<!-- TIMER -->
 <div class="page" id="page-timer">
-  <div class="page-header">
-    <div class="page-title">Lern-Timer</div>
-    <div class="page-sub">Pomodoro-Methode · automatische Pausen</div>
-  </div>
-  <div class="card" style="max-width:480px;margin:0 auto">
-    <div class="timer-blocks" id="timerPips"></div>
-    <div class="timer-big" id="timerDisp">90:00</div>
-    <div class="timer-block-name" id="timerName">Bereit · Drück Start</div>
-    <div class="timer-progress"><div class="timer-progress-fill" id="timerFill" style="width:0%"></div></div>
-    <div class="btn-row" style="margin-bottom:20px">
-      <button class="btn btn-gold" id="timerStart">▶ Starten</button>
+  <div class="ph"><div class="ph-left"><h1>Lern-Timer</h1><p>Pomodoro · Streak zählt ab der ersten abgeschlossenen Einheit</p></div></div>
+  <div class="card" style="max-width:460px;margin:0 auto">
+    <div class="timer-pips" id="timerPips"></div>
+    <div class="timer-display" id="timerDisp">–:––</div>
+    <div class="timer-label" id="timerLabel">Bereit · Drück Start</div>
+    <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:0%"></div></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:18px">
+      <button class="btn btn-gold" id="timerStart">▶ Start</button>
       <button class="btn" id="timerSkip">⏭ Skip</button>
       <button class="btn btn-red" id="timerReset">↺ Reset</button>
     </div>
-    <div class="grid3">
-      <div class="stat-card"><div class="stat-n" id="tmDone">0/4</div><div class="stat-l">Einheiten</div></div>
-      <div class="stat-card"><div class="stat-n" id="tmXP">+0</div><div class="stat-l">XP heute</div></div>
-      <div class="stat-card"><div class="stat-n" id="tmEnd">–</div><div class="stat-l">Fertig um</div></div>
+    <div class="g3">
+      <div class="sc"><div class="sc-n" id="tmDone">0</div><div class="sc-l">Einheiten</div></div>
+      <div class="sc"><div class="sc-n" id="tmXP">+0</div><div class="sc-l">XP heute</div></div>
+      <div class="sc"><div class="sc-n" id="tmEnd">–</div><div class="sc-l">Fertig um</div></div>
     </div>
-    <div style="margin-top:14px;text-align:center;font-size:11px;color:var(--text3);font-style:italic">
-      Pro Einheit: +50 XP · +5 🪙 · +Streak-Bonus bei >1 Tag
+    <div style="margin-top:12px;text-align:center;font-size:11px;color:var(--text3);font-style:italic">
+      Pro Einheit: +50 XP · +2 🪙 · Streak ab 1. Einheit täglich
     </div>
   </div>
 </div>
 
-<!-- ===== KALENDER ===== -->
+<!-- KALENDER -->
 <div class="page" id="page-kalender">
-  <div class="page-header" style="display:flex;align-items:center;gap:12px">
-    <div>
-      <div class="page-title">Kalender</div>
-      <div class="page-sub">Prüfungen, ESAs, freie Tage & Lernplanung</div>
-    </div>
-    <button class="btn btn-gold" style="margin-left:auto" id="addEventBtn">+ Eintrag</button>
+  <div class="ph">
+    <div class="ph-left"><h1>Kalender</h1><p>Prüfungen, ESAs, freie Tage & Notizen</p></div>
+    <button class="btn btn-gold" id="addEventBtn">+ Eintrag</button>
   </div>
-  <div class="card" style="margin-bottom:16px">
+  <div class="card" style="margin-bottom:14px">
     <div class="cal-nav">
       <button class="btn btn-sm" id="calPrev">‹</button>
       <div class="cal-title" id="calTitle"></div>
@@ -372,110 +427,127 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </div>
 
-<!-- ===== HEFTE ===== -->
+<!-- HEFTE -->
 <div class="page" id="page-hefte">
-  <div class="page-header" style="display:flex;align-items:center;gap:12px">
-    <div>
-      <div class="page-title">Heft-Tracker</div>
-      <div class="page-sub">Lernfortschritt pro Fach verfolgen</div>
-    </div>
-    <button class="btn btn-gold" style="margin-left:auto" id="addHeftBtn">+ Heft</button>
+  <div class="ph">
+    <div class="ph-left"><h1>Heft-Tracker</h1><p>Lernfortschritt pro Fach & Heft</p></div>
+    <button class="btn btn-gold" id="addHeftBtn">+ Heft</button>
   </div>
   <div id="hefteList"></div>
 </div>
 
-<!-- ===== NOTEN ===== -->
+<!-- NOTEN -->
 <div class="page" id="page-noten">
-  <div class="page-header" style="display:flex;align-items:center;gap:12px">
-    <div>
-      <div class="page-title">Notentabelle</div>
-      <div class="page-sub">Alle Noten & Durchschnitt – Fernabi-Übersicht</div>
-    </div>
-    <button class="btn btn-gold" style="margin-left:auto" id="addNoteBtn">+ Note</button>
+  <div class="ph">
+    <div class="ph-left"><h1>Notentabelle</h1><p>Fernabi · alle Noten & Durchschnitt</p></div>
+    <button class="btn btn-gold" id="addNoteBtn">+ Note</button>
   </div>
-  <div class="grid2" style="margin-bottom:16px">
-    <div class="stat-card">
-      <div class="stat-n" id="noteAvg">–</div>
-      <div class="stat-l">Notenschnitt</div>
-      <div class="stat-sub">alle Fächer</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-n" id="noteCount">0</div>
-      <div class="stat-l">Eingetragene Noten</div>
-    </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="sc"><div class="sc-n" id="noteAvg">–</div><div class="sc-l">Notenschnitt</div></div>
+    <div class="sc"><div class="sc-n" id="noteCount">0</div><div class="sc-l">Noten eingetragen</div></div>
   </div>
-  <div class="card">
-    <table class="grade-table" id="gradeTable">
-      <thead>
-        <tr>
-          <th>Fach</th>
-          <th>Typ</th>
-          <th>Datum</th>
-          <th>Note</th>
-          <th>Punkte</th>
-          <th>Notiz</th>
-          <th></th>
-        </tr>
-      </thead>
+  <div class="card" style="overflow-x:auto">
+    <table class="grade-tbl" id="gradeTable">
+      <thead><tr><th>Fach</th><th>Typ</th><th>Datum</th><th>Note</th><th>Pkt</th><th>Notiz</th><th></th></tr></thead>
       <tbody id="gradeBody"></tbody>
     </table>
     <div id="gradeEmpty" style="text-align:center;padding:2rem;color:var(--text3);font-style:italic;display:none">Noch keine Noten eingetragen</div>
   </div>
-  <!-- Per-subject averages -->
-  <div class="card" style="margin-top:16px">
+  <div class="card" style="margin-top:12px">
     <div class="card-title">Schnitt pro Fach</div>
     <div id="fachAverages"></div>
   </div>
 </div>
 
-<!-- ===== STATISTIK ===== -->
+<!-- FERNABI PLAN -->
+<div class="page" id="page-fernabi">
+  <div class="ph"><div class="ph-left"><h1>Fernabi-Plan</h1><p>Deine ~2,5 Jahre bis zum Abschluss im Überblick</p></div></div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <div class="sc">
+      <div class="sc-n" id="faTageBis">–</div>
+      <div class="sc-l">Tage bis Zieldatum</div>
+    </div>
+    <div class="sc">
+      <div class="sc-n" id="faProzent">0%</div>
+      <div class="sc-l">Zeit absolviert</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">Zeitraum</div>
+    <div class="g2">
+      <div class="field"><label>Startdatum</label><input type="date" id="faStart"/></div>
+      <div class="field"><label>Geplantes Abidatum</label><input type="date" id="faEnd"/></div>
+    </div>
+    <button class="btn btn-gold" id="faSave">Speichern</button>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">Gesamtfortschritt</div>
+    <div id="faProgressBar" style="height:12px;background:var(--bg3);border-radius:6px;overflow:hidden;margin-bottom:8px">
+      <div id="faProgressFill" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:6px;transition:width .6s;width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--font-m)">
+      <span id="faStartLbl">–</span>
+      <span id="faNowLbl">Heute</span>
+      <span id="faEndLbl">–</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">Halbjahres-Phasen</div>
+    <div id="faPhasen"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Empfehlungen</div>
+    <div id="faEmpfehlungen" style="font-size:13px;color:var(--text2);line-height:1.7"></div>
+  </div>
+</div>
+
+<!-- STATISTIK -->
 <div class="page" id="page-statistik">
-  <div class="page-header">
-    <div class="page-title">Statistik</div>
-    <div class="page-sub">Deine Lernhistorie auf einen Blick</div>
+  <div class="ph"><div class="ph-left"><h1>Statistik</h1><p>Deine Lernhistorie im Überblick</p></div></div>
+  <div class="g4" style="margin-bottom:14px">
+    <div class="sc"><div class="sc-n" id="stSessions">0</div><div class="sc-l">Einheiten</div></div>
+    <div class="sc"><div class="sc-n" id="stHours">0h</div><div class="sc-l">Lernstunden</div></div>
+    <div class="sc"><div class="sc-n" id="stStreak">0</div><div class="sc-l">Bester Streak</div></div>
+    <div class="sc"><div class="sc-n" id="stTok">0</div><div class="sc-l">Token verdient</div></div>
   </div>
-  <div class="grid4" style="margin-bottom:16px">
-    <div class="stat-card"><div class="stat-n" id="stSessions">0</div><div class="stat-l">Einheiten gesamt</div></div>
-    <div class="stat-card"><div class="stat-n" id="stHours">0h</div><div class="stat-l">Lernstunden</div></div>
-    <div class="stat-card"><div class="stat-n" id="stStreak">0</div><div class="stat-l">Bester Streak</div></div>
-    <div class="stat-card"><div class="stat-n" id="stTokensEarned">0</div><div class="stat-l">Token verdient</div></div>
-  </div>
-  <div class="grid2" style="margin-bottom:16px">
+  <div class="g2" style="margin-bottom:14px">
     <div class="card">
-      <div class="card-title">Einheiten letzte 7 Tage</div>
-      <div id="week7Chart"></div>
+      <div class="card-title">Einheiten · letzte 7 Tage</div>
+      <div id="chart7sess"></div>
     </div>
     <div class="card">
-      <div class="card-title">XP letzte 7 Tage</div>
-      <div id="week7XPChart"></div>
+      <div class="card-title">XP · letzte 7 Tage</div>
+      <div id="chart7xp"></div>
     </div>
   </div>
-  <div class="card" style="margin-bottom:16px">
+  <div class="card" style="margin-bottom:14px">
     <div class="card-title">Fachverteilung (Stundenplan)</div>
     <div id="fachDist"></div>
   </div>
   <div class="card">
-    <div class="card-title">Lernkontinuität</div>
-    <div id="continuityGrid" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px"></div>
-    <div style="font-size:10px;color:var(--text3);margin-top:8px;font-style:italic">Letzte 90 Tage · Grün = gelernt</div>
+    <div class="card-title">Lerntage · letzte 90 Tage</div>
+    <div id="contGrid" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px"></div>
+    <div style="font-size:10px;color:var(--text3);margin-top:6px;font-style:italic">Grün = gelernt (mind. 1 Einheit)</div>
   </div>
 </div>
 
-<!-- ===== XP & LEVEL ===== -->
+<!-- XP -->
 <div class="page" id="page-xp">
-  <div class="page-header">
-    <div class="page-title">XP & Level</div>
-    <div class="page-sub">15 Stufen bis zum Abi-Shogun</div>
+  <div class="ph"><div class="ph-left"><h1>XP & Level</h1><p>15 Stufen bis zum Abi-Shogun</p></div></div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="sc"><div class="sc-n" id="xpTotal">0</div><div class="sc-l">Gesamt XP</div></div>
+    <div class="sc"><div class="sc-n" id="xpLvl">1</div><div class="sc-l">Level</div></div>
   </div>
-  <div class="grid2" style="margin-bottom:16px">
-    <div class="stat-card"><div class="stat-n" id="xpTotal">0</div><div class="stat-l">Gesamt XP</div></div>
-    <div class="stat-card"><div class="stat-n" id="xpLevel">1</div><div class="stat-l">Level</div></div>
-  </div>
-  <div class="card" style="margin-bottom:16px">
+  <div class="card" style="margin-bottom:14px">
     <div class="card-title">Aktueller Rang</div>
-    <div style="font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--accent)" id="xpTitle">Novize</div>
-    <div style="font-size:12px;color:var(--text3);margin-top:6px;font-style:italic" id="xpNext">Noch 100 XP bis zum nächsten Level</div>
-    <div class="xp-bar" style="margin-top:12px;height:8px"><div class="xp-fill" id="xpFillBig" style="width:0%"></div></div>
+    <div style="font-family:var(--font-d);font-size:28px;color:var(--accent)" id="xpTitle">Novize</div>
+    <div style="font-size:12px;color:var(--text3);margin-top:5px;font-style:italic" id="xpNext">–</div>
+    <div class="xp-track" style="height:7px;margin-top:10px"><div class="xp-fill" id="xpFillBig" style="width:0%"></div></div>
   </div>
   <div class="card">
     <div class="card-title">Level-Pfad</div>
@@ -483,47 +555,38 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </div>
 
-<!-- ===== BADGES ===== -->
+<!-- BADGES -->
 <div class="page" id="page-badges">
-  <div class="page-header">
-    <div class="page-title">Abzeichen</div>
-    <div class="page-sub">Freischalten durch konsequentes Lernen</div>
-  </div>
-  <div id="badgesUnlocked" style="margin-bottom:8px;font-family:var(--font-mono);font-size:11px;color:var(--text3)"></div>
-  <div class="badges-grid" id="badgesGrid"></div>
+  <div class="ph"><div class="ph-left"><h1>Abzeichen</h1><p>Freischalten durch konsequentes Lernen</p></div></div>
+  <div style="margin-bottom:10px;font-family:var(--font-m);font-size:11px;color:var(--text3)" id="badgeCount"></div>
+  <div class="badges-wrap" id="badgesGrid"></div>
 </div>
 
-<!-- ===== BELOHNUNGEN ===== -->
+<!-- TOKENS / BELOHNUNGEN -->
 <div class="page" id="page-tokens">
-  <div class="page-header" style="display:flex;align-items:center;gap:12px">
-    <div>
-      <div class="page-title">Belohnungen</div>
-      <div class="page-sub">Verdiene Token und gönne dir echte Pausen</div>
-    </div>
-    <button class="btn btn-gold" style="margin-left:auto" id="addRewardBtn">+ Belohnung</button>
+  <div class="ph">
+    <div class="ph-left"><h1>Belohnungen</h1><p>Verdiene Token · gönne dir echte Pausen</p></div>
+    <button class="btn btn-gold" id="addRewardBtn">+ Belohnung</button>
   </div>
-  <div class="card" style="margin-bottom:16px;display:flex;align-items:center;gap:20px">
-    <div style="font-family:var(--font-mono);font-size:40px;color:var(--gold);font-weight:700">🪙<span id="tokBalance">0</span></div>
+  <div class="card" style="margin-bottom:14px;display:flex;align-items:center;gap:18px">
+    <div style="font-family:var(--font-m);font-size:38px;color:var(--gold);font-weight:500">🪙 <span id="tokBal">0</span></div>
     <div>
-      <div style="font-size:14px;font-weight:700;font-family:var(--font-display)">Deine Token</div>
-      <div style="font-size:12px;color:var(--text3);font-style:italic;margin-top:3px">+5 Token pro Lerneinheit · Streak-Bonus möglich</div>
+      <div style="font-size:14px;font-weight:500">Dein Guthaben</div>
+      <div style="font-size:11px;color:var(--text3);font-style:italic;margin-top:2px">+2 Token pro Lerneinheit · Streak-Bonus möglich</div>
     </div>
   </div>
   <div id="rewardsList"></div>
 </div>
 
-<!-- ===== SETUP ===== -->
+<!-- SETUP -->
 <div class="page" id="page-setup">
-  <div class="page-header">
-    <div class="page-title">Einstellungen</div>
-    <div class="page-sub">Timer, Fächer & Daten</div>
-  </div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-title">Lernzeit</div>
-    <div class="grid2">
-      <div class="field"><label>Startzeit (Stunden)</label><input type="number" id="cfgStartH" value="4" min="0" max="23"/></div>
-      <div class="field"><label>Startzeit (Minuten)</label><input type="number" id="cfgStartM" value="0" min="0" max="59"/></div>
-      <div class="field"><label>Lerneinheiten pro Tag</label><input type="number" id="cfgBlocks" value="4" min="1" max="8"/></div>
+  <div class="ph"><div class="ph-left"><h1>Einstellungen</h1><p>Timer, Startzeit & Datenmanagement</p></div></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">Timer-Konfiguration</div>
+    <div class="g2">
+      <div class="field"><label>Start (Stunde)</label><input type="number" id="cfgSH" value="4" min="0" max="23"/></div>
+      <div class="field"><label>Start (Minute)</label><input type="number" id="cfgSM" value="0" min="0" max="59"/></div>
+      <div class="field"><label>Einheiten pro Tag</label><input type="number" id="cfgBlk" value="4" min="1" max="8"/></div>
       <div class="field"><label>Einheitsdauer (Min)</label><input type="number" id="cfgLearn" value="90" min="15" max="180"/></div>
       <div class="field"><label>Pausendauer (Min)</label><input type="number" id="cfgPause" value="15" min="5" max="30"/></div>
     </div>
@@ -532,88 +595,85 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:16px 0}
   <div class="card">
     <div class="card-title">Daten</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn" id="exportBtn">📤 Exportieren</button>
+      <button class="btn" id="exportBtn">📤 Exportieren (JSON)</button>
+      <label class="btn" style="cursor:pointer">📥 Importieren <input type="file" id="importFile" accept=".json" style="display:none"/></label>
       <button class="btn btn-red" id="resetAllBtn">🗑 Alles zurücksetzen</button>
     </div>
   </div>
 </div>
 
 </main>
-</div><!-- end shell -->
+</div>
 
 <!-- MODALS -->
 <div class="modal-bg" id="modalBg" style="display:none">
   <div class="modal" id="modalBox"></div>
 </div>
-<div id="toastContainer" style="position:fixed;top:70px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px"></div>
+<div id="toastContainer" style="position:fixed;top:64px;right:16px;z-index:300;display:flex;flex-direction:column;gap:7px"></div>
 
 <script>
-// ============================================================
-// DATA CONSTANTS
-// ============================================================
+// ── CONSTANTS ──────────────────────────────────────────────
 const FAECHER = ['Mathematik','Physik','Chemie','Deutsch','Englisch','Latein','Geschichte','PGW','Biologie','Informatik'];
 const DAYS = ['Mo','Di','Mi','Do','Fr'];
-const NOTE_TYPEN = ['Klausur','Test','Hausarbeit','Mündliche Prüfung','ESA','Praktikum','Sonstiges'];
+const NOTE_TYPEN = ['Klausur','Test','Hausarbeit','Mündlich','ESA','Praktikum','Sonstiges'];
 
 const LEVELS = [
-  {level:1,  title:'Novize',         emoji:'🌱', xp:0},
-  {level:2,  title:'Lernender',      emoji:'📖', xp:100},
-  {level:3,  title:'Schreiber',      emoji:'✍️',  xp:220},
-  {level:4,  title:'Lehrling',       emoji:'🪶', xp:380},
-  {level:5,  title:'Kämpfer',        emoji:'⚔️',  xp:600},
-  {level:6,  title:'Ronin',          emoji:'🗡️',  xp:900},
-  {level:7,  title:'Samurai',        emoji:'⛩️',  xp:1300},
-  {level:8,  title:'Wächter',        emoji:'🛡️',  xp:1800},
-  {level:9,  title:'Senpai',         emoji:'🎌', xp:2500},
-  {level:10, title:'Sensei',         emoji:'🏯', xp:3300},
-  {level:11, title:'Meister',        emoji:'🐉', xp:4300},
-  {level:12, title:'Weiser',         emoji:'🌙', xp:5500},
-  {level:13, title:'Legende',        emoji:'⭐', xp:7000},
-  {level:14, title:'Abi-Krieger',    emoji:'🔱', xp:9000},
-  {level:15, title:'Abi-Shogun',     emoji:'👑', xp:12000},
+  {level:1,  title:'Novize',      emoji:'🌱', xp:0},
+  {level:2,  title:'Lernender',   emoji:'📖', xp:100},
+  {level:3,  title:'Schreiber',   emoji:'✍️',  xp:220},
+  {level:4,  title:'Lehrling',    emoji:'🪶', xp:380},
+  {level:5,  title:'Kämpfer',     emoji:'⚔️',  xp:600},
+  {level:6,  title:'Ronin',       emoji:'🗡️',  xp:900},
+  {level:7,  title:'Samurai',     emoji:'⛩️',  xp:1300},
+  {level:8,  title:'Wächter',     emoji:'🛡️',  xp:1800},
+  {level:9,  title:'Senpai',      emoji:'🎌', xp:2500},
+  {level:10, title:'Sensei',      emoji:'🏯', xp:3300},
+  {level:11, title:'Meister',     emoji:'🐉', xp:4300},
+  {level:12, title:'Weiser',      emoji:'🌙', xp:5500},
+  {level:13, title:'Legende',     emoji:'⭐', xp:7000},
+  {level:14, title:'Abi-Krieger', emoji:'🔱', xp:9000},
+  {level:15, title:'Abi-Shogun',  emoji:'👑', xp:12000},
 ];
 
 const BADGES = [
-  {id:'first',      name:'Erste Klinge',    emoji:'⚔️',  desc:'Erste Lerneinheit'},
-  {id:'s3',         name:'Flammen-Geist',   emoji:'🔥', desc:'3 Tage Streak'},
-  {id:'s7',         name:'Sieben Schatten', emoji:'🌑', desc:'7 Tage Streak'},
-  {id:'s14',        name:'Halbmond',        emoji:'🌗', desc:'14 Tage Streak'},
-  {id:'s30',        name:'Ewige Flamme',    emoji:'🕯️',  desc:'30 Tage Streak'},
-  {id:'lv5',        name:'Ronin-Pfad',      emoji:'🗡️',  desc:'Level 5 erreicht'},
-  {id:'lv10',       name:'Sensei',          emoji:'🏯', desc:'Level 10 erreicht'},
-  {id:'lv15',       name:'Shogun',          emoji:'👑', desc:'Level 15 – Abi-Shogun!'},
-  {id:'ses10',      name:'Zehn Schläge',    emoji:'💥', desc:'10 Einheiten gesamt'},
-  {id:'ses25',      name:'Ausdauer',        emoji:'🏃', desc:'25 Einheiten gesamt'},
-  {id:'ses50',      name:'Ewiger Schüler',  emoji:'📜', desc:'50 Einheiten gesamt'},
-  {id:'ses100',     name:'Hundert Schritte',emoji:'🏔️', desc:'100 Einheiten gesamt'},
-  {id:'heft1',      name:'Heft-Bezwinger',  emoji:'📓', desc:'1 Heft 100% fertig'},
-  {id:'heft5',      name:'Fünf-Hefte',      emoji:'📚', desc:'5 Hefte abgeschlossen'},
-  {id:'tok50',      name:'Gold-Ninja',      emoji:'🥇', desc:'50 Token verdient'},
-  {id:'tok200',     name:'Schatzkammer',    emoji:'💰', desc:'200 Token verdient'},
-  {id:'xp500',      name:'Halbtausend',     emoji:'⚡', desc:'500 XP gesammelt'},
-  {id:'xp1000',     name:'Tausend Schritte',emoji:'🌟', desc:'1000 XP gesammelt'},
-  {id:'xp5000',     name:'Fünf-Sterne',     emoji:'✨', desc:'5000 XP gesammelt'},
-  {id:'early',      name:'Morgen-Samurai',  emoji:'🌅', desc:'Vor 6 Uhr gestartet'},
-  {id:'note1',      name:'Erst-Prüfung',    emoji:'📋', desc:'Erste Note eingetragen'},
-  {id:'allfach',    name:'Allrounder',      emoji:'🎯', desc:'In 5+ Fächern Noten'},
+  {id:'first',   name:'Erste Klinge',     emoji:'⚔️',  desc:'1. Lerneinheit'},
+  {id:'s3',      name:'3-Tage-Feuer',     emoji:'🔥', desc:'3 Tage Streak'},
+  {id:'s7',      name:'Sieben Schatten',  emoji:'🌑', desc:'7 Tage Streak'},
+  {id:'s14',     name:'Halbmond',         emoji:'🌗', desc:'14 Tage Streak'},
+  {id:'s30',     name:'Ewige Flamme',     emoji:'🕯️',  desc:'30 Tage Streak'},
+  {id:'lv5',     name:'Ronin-Pfad',       emoji:'🗡️',  desc:'Level 5'},
+  {id:'lv10',    name:'Sensei',           emoji:'🏯', desc:'Level 10'},
+  {id:'lv15',    name:'Shogun',           emoji:'👑', desc:'Level 15'},
+  {id:'ses10',   name:'Zehn Schläge',     emoji:'💥', desc:'10 Einheiten'},
+  {id:'ses25',   name:'Ausdauer',         emoji:'🏃', desc:'25 Einheiten'},
+  {id:'ses50',   name:'Ewiger Schüler',   emoji:'📜', desc:'50 Einheiten'},
+  {id:'ses100',  name:'100 Schritte',     emoji:'🏔️', desc:'100 Einheiten'},
+  {id:'heft1',   name:'Heft-Bezwinger',   emoji:'📓', desc:'1 Heft abgeschlossen'},
+  {id:'heft5',   name:'Fünf-Hefte',       emoji:'📚', desc:'5 Hefte abgeschlossen'},
+  {id:'tok50',   name:'Gold-Ninja',       emoji:'🥇', desc:'50 Token verdient'},
+  {id:'tok200',  name:'Schatzkammer',     emoji:'💰', desc:'200 Token verdient'},
+  {id:'xp500',   name:'Halbtausend',      emoji:'⚡', desc:'500 XP'},
+  {id:'xp1000',  name:'Tausend',          emoji:'🌟', desc:'1000 XP'},
+  {id:'xp5000',  name:'Fünf-Sterne',      emoji:'✨', desc:'5000 XP'},
+  {id:'early',   name:'Morgen-Samurai',   emoji:'🌅', desc:'Vor 6 Uhr gestartet'},
+  {id:'note1',   name:'Erst-Prüfung',     emoji:'📋', desc:'Erste Note'},
+  {id:'allfach', name:'Allrounder',       emoji:'🎯', desc:'Noten in 5+ Fächern'},
 ];
 
 const DEFAULT_REWARDS = [
-  {id:'r1', name:'Lieblingsgetränk 🥤',     desc:'0,5 Liter deiner Wahl – verdient!',              cost:8},
-  {id:'r2', name:'Gaming-Session 🎮',        desc:'1 Stunde zocken ohne schlechtes Gewissen',        cost:15},
-  {id:'r3', name:'Anime-Episode 📺',         desc:'Eine Folge deiner Lieblingsserie',                cost:6},
-  {id:'r4', name:'Lieblingsessen 🍕',        desc:'Bestellung oder selbst kochen – dein Wunsch',     cost:20},
-  {id:'r5', name:'Freier Halbtag ☀️',        desc:'4 Stunden komplett frei – keine Schuldgefühle',  cost:40},
-  {id:'r6', name:'Freier Ganztag 🌴',        desc:'Ein ganzer Tag Erholung – vollständig frei',      cost:80},
-  {id:'r7', name:'Kinoabend 🎬',             desc:'Film deiner Wahl, Popcorn inklusive',             cost:25},
-  {id:'r8', name:'Social Media ohne Limit 📱',desc:'2 Stunden uneingeschränktes Scrollen',           cost:12},
-  {id:'r9', name:'Wunsch-Snack 🍫',          desc:'Der Snack den du dir schon lange gewünscht hast', cost:10},
-  {id:'r10',name:'Ausschlafen 😴',           desc:'Morgen ohne Wecker – luxuriös schlafen',          cost:30},
+  {id:'r1',  name:'Lieblingsgetränk 🥤',       desc:'0,5 Liter deiner Wahl',                  cost:8},
+  {id:'r2',  name:'Gaming-Session 🎮',          desc:'1 Stunde zocken ohne Schuldgefühle',      cost:15},
+  {id:'r3',  name:'Anime-Episode 📺',           desc:'Eine Folge deiner Lieblingsserie',        cost:6},
+  {id:'r4',  name:'Lieblingsessen 🍕',          desc:'Bestellen oder selber kochen',            cost:20},
+  {id:'r5',  name:'Freier Halbtag ☀️',          desc:'4 Stunden komplett frei',                cost:40},
+  {id:'r6',  name:'Freier Ganztag 🌴',          desc:'Ein ganzer Tag Erholung',                cost:80},
+  {id:'r7',  name:'Kinoabend 🎬',              desc:'Film deiner Wahl',                        cost:25},
+  {id:'r8',  name:'Social Media 2h 📱',        desc:'Uneingeschränktes Scrollen',              cost:12},
+  {id:'r9',  name:'Wunsch-Snack 🍫',           desc:'Der Snack den du dir gewünscht hast',     cost:10},
+  {id:'r10', name:'Ausschlafen 😴',             desc:'Morgen ohne Wecker',                     cost:30},
 ];
 
-// ============================================================
-// STATE
-// ============================================================
+// ── STATE ──────────────────────────────────────────────────
 let S = loadState();
 
 function defaultState(){
@@ -622,232 +682,195 @@ function defaultState(){
     streak:0, bestStreak:0, lastLearnDate:null,
     sessions:0, early_starts:0, hefts_done:0,
     schedule:{}, hefte:[], rewards:JSON.parse(JSON.stringify(DEFAULT_REWARDS)),
-    badges_unlocked:[],
-    sessions_today:0, xp_today:0,
+    badges_unlocked:[], sessions_today:0, xp_today:0,
     cfg:{startH:4, startM:0, blocks:4, learn:90, pause:15},
-    calEvents:[],
-    grades:[],
-    dailyLog:{}, // date -> {sessions, xp}
+    calEvents:[], grades:[], dailyLog:{},
+    fernabi:{start:null, end:null},
+    darkMode:false,
   };
 }
 function loadState(){
   try{
-    const d=JSON.parse(localStorage.getItem('abidojo_v3')||'null');
-    if(!d) return defaultState();
+    const d=JSON.parse(localStorage.getItem('abidojo_v4')||'null');
+    if(!d)return defaultState();
     const def=defaultState();
-    return {...def,...d,cfg:{...def.cfg,...(d.cfg||{})},
-      calEvents:d.calEvents||[], grades:d.grades||[], dailyLog:d.dailyLog||{}};
+    return{...def,...d,
+      cfg:{...def.cfg,...(d.cfg||{})},
+      calEvents:d.calEvents||[],grades:d.grades||[],
+      dailyLog:d.dailyLog||{},fernabi:d.fernabi||{start:null,end:null},
+      darkMode:d.darkMode||false};
   }catch(e){return defaultState();}
 }
-function save(){localStorage.setItem('abidojo_v3',JSON.stringify(S));}
+function save(){localStorage.setItem('abidojo_v4',JSON.stringify(S));}
 
-// ============================================================
-// XP / LEVEL
-// ============================================================
-function getLevel(xp){let lv=LEVELS[0];for(const l of LEVELS){if(xp>=l.xp)lv=l;}return lv;}
-function getNextLevel(xp){for(const l of LEVELS){if(xp<l.xp)return l;}return null;}
-
-function addXP(amount){
-  const before=getLevel(S.xp);
-  S.xp+=amount;
-  S.xp_today=(S.xp_today||0)+amount;
-  // log daily
-  const td=todayStr();
-  if(!S.dailyLog[td]) S.dailyLog[td]={sessions:0,xp:0};
-  S.dailyLog[td].xp+=amount;
-  const after=getLevel(S.xp);
-  save(); updateTopBar();
-  if(after.level>before.level){
-    showToast(`🎉 Level Up!`,`${after.emoji} ${after.title} – Level ${after.level}`);
-    checkBadges();
-  }
+// ── DARK MODE ──────────────────────────────────────────────
+function applyDark(){
+  document.body.classList.toggle('dark',S.darkMode);
+  document.getElementById('darkToggle').textContent=S.darkMode?'☀️':'🌙';
 }
-function addTokens(amount){S.tokens+=amount;S.tokens_earned=(S.tokens_earned||0)+amount;save();updateTopBar();}
+document.getElementById('darkToggle').addEventListener('click',()=>{
+  S.darkMode=!S.darkMode;save();applyDark();
+});
+applyDark();
 
-// ============================================================
-// STREAK – realtime check
-// ============================================================
+// ── XP / LEVEL ─────────────────────────────────────────────
+function getLevel(xp){let l=LEVELS[0];for(const v of LEVELS){if(xp>=v.xp)l=v;}return l;}
+function getNextLevel(xp){for(const v of LEVELS){if(xp<v.xp)return v;}return null;}
+
+function addXP(amt){
+  const before=getLevel(S.xp);
+  S.xp+=amt;S.xp_today=(S.xp_today||0)+amt;
+  const td=todayStr();
+  if(!S.dailyLog[td])S.dailyLog[td]={sessions:0,xp:0};
+  S.dailyLog[td].xp+=amt;
+  const after=getLevel(S.xp);
+  save();updateTopBar();
+  if(after.level>before.level){showToast(`🎉 Level Up!`,`${after.emoji} ${after.title} – Level ${after.level}`);checkBadges();}
+}
+function addTokens(amt){S.tokens+=amt;S.tokens_earned=(S.tokens_earned||0)+amt;save();updateTopBar();}
+
+// ── STREAK ─────────────────────────────────────────────────
 function todayStr(){return new Date().toDateString();}
 function yesterdayStr(){return new Date(Date.now()-86400000).toDateString();}
 
-function checkStreak(){
+// Called whenever a learning unit completes (1 unit = streak counted)
+function markStreak(){
   const today=todayStr();
+  if(S.lastLearnDate===today)return;
   const yesterday=yesterdayStr();
-  if(S.lastLearnDate===today) return; // already counted today
-  if(S.lastLearnDate===yesterday){
-    S.streak++;
-  } else {
-    // Missed a day (or first time ever)
-    S.streak=1;
-  }
-  if(S.streak>S.bestStreak) S.bestStreak=S.streak;
+  S.streak=S.lastLearnDate===yesterday?S.streak+1:1;
+  if(S.streak>S.bestStreak)S.bestStreak=S.streak;
   S.lastLearnDate=today;
-  // Log day
-  if(!S.dailyLog[today]) S.dailyLog[today]={sessions:0,xp:0};
-  save(); updateTopBar();
+  const td=today;
+  if(!S.dailyLog[td])S.dailyLog[td]={sessions:0,xp:0};
+  save();updateTopBar();checkStreakUI();
 }
 
-function checkStreakDecay(){
-  // If last learn was not today and not yesterday, streak should show warning or be 0
-  const today=todayStr();
-  const yesterday=yesterdayStr();
+function checkStreakUI(){
+  const today=todayStr(),yesterday=yesterdayStr();
+  const pill=document.getElementById('streakPill');
   const warn=document.getElementById('streakWarn');
-  const el=document.getElementById('streakDisp');
-  if(!S.lastLearnDate) return;
-  if(S.lastLearnDate!==today && S.lastLearnDate!==yesterday){
-    // Streak broken
+  if(!S.lastLearnDate){pill.className='top-pill';if(warn)warn.style.display='none';return;}
+  if(S.lastLearnDate!==today&&S.lastLearnDate!==yesterday){
     if(S.streak>0){S.streak=0;save();}
-    el.classList.remove('streak-danger');
+    pill.className='top-pill';
+    if(warn)warn.style.display='none';
   } else if(S.lastLearnDate===yesterday){
-    // Warn: learn today or lose it
-    el.classList.add('streak-danger');
-    if(warn) warn.style.display='flex';
+    pill.className='top-pill';
+    document.getElementById('topStreak').className='val streak-warn';
+    if(warn)warn.style.display='flex';
   } else {
-    el.classList.remove('streak-danger');
-    if(warn) warn.style.display='none';
+    document.getElementById('topStreak').className='val streak-active';
+    if(warn)warn.style.display='none';
   }
   updateTopBar();
 }
 
-// ============================================================
-// BADGES
-// ============================================================
+// ── BADGES ─────────────────────────────────────────────────
 function checkBadges(){
   const lv=getLevel(S.xp).level;
-  const fachesWithGrades=new Set((S.grades||[]).map(g=>g.fach)).size;
-  const checks={
-    first:   S.sessions>=1,
-    s3:      S.streak>=3,
-    s7:      S.streak>=7,
-    s14:     S.streak>=14,
-    s30:     S.streak>=30,
-    lv5:     lv>=5,
-    lv10:    lv>=10,
-    lv15:    lv>=15,
-    ses10:   S.sessions>=10,
-    ses25:   S.sessions>=25,
-    ses50:   S.sessions>=50,
-    ses100:  S.sessions>=100,
-    heft1:   S.hefts_done>=1,
-    heft5:   S.hefts_done>=5,
-    tok50:   S.tokens_earned>=50,
-    tok200:  S.tokens_earned>=200,
-    xp500:   S.xp>=500,
-    xp1000:  S.xp>=1000,
-    xp5000:  S.xp>=5000,
-    early:   (S.early_starts||0)>=1,
-    note1:   (S.grades||[]).length>=1,
-    allfach: fachesWithGrades>=5,
+  const fachN=new Set((S.grades||[]).map(g=>g.fach)).size;
+  const chk={
+    first:S.sessions>=1,s3:S.streak>=3,s7:S.streak>=7,s14:S.streak>=14,s30:S.streak>=30,
+    lv5:lv>=5,lv10:lv>=10,lv15:lv>=15,
+    ses10:S.sessions>=10,ses25:S.sessions>=25,ses50:S.sessions>=50,ses100:S.sessions>=100,
+    heft1:S.hefts_done>=1,heft5:S.hefts_done>=5,
+    tok50:S.tokens_earned>=50,tok200:S.tokens_earned>=200,
+    xp500:S.xp>=500,xp1000:S.xp>=1000,xp5000:S.xp>=5000,
+    early:(S.early_starts||0)>=1,note1:(S.grades||[]).length>=1,allfach:fachN>=5,
   };
   let changed=false;
   BADGES.forEach(b=>{
-    if(!S.badges_unlocked.includes(b.id) && checks[b.id]){
-      S.badges_unlocked.push(b.id);
-      showToast(`${b.emoji} Badge freigeschaltet!`,b.name);
-      changed=true;
+    if(!S.badges_unlocked.includes(b.id)&&chk[b.id]){
+      S.badges_unlocked.push(b.id);showToast(`${b.emoji} Badge!`,b.name);changed=true;
     }
   });
   if(changed){save();renderBadges();}
 }
 
-// ============================================================
-// TOPBAR
-// ============================================================
+// ── TOPBAR ─────────────────────────────────────────────────
 function updateTopBar(){
-  const lv=getLevel(S.xp), next=getNextLevel(S.xp);
-  document.getElementById('topLevelTitle').textContent=`${lv.emoji} ${lv.title}`;
+  const lv=getLevel(S.xp),next=getNextLevel(S.xp);
+  document.getElementById('topLvlTitle').textContent=`${lv.emoji} ${lv.title}`;
   if(next){
     const pct=Math.round(((S.xp-lv.xp)/(next.xp-lv.xp))*100);
     document.getElementById('topXpFill').style.width=pct+'%';
-    document.getElementById('topXpLabel').textContent=`${S.xp-lv.xp} / ${next.xp-lv.xp} XP`;
+    document.getElementById('topXpLbl').textContent=`${S.xp-lv.xp} / ${next.xp-lv.xp} XP`;
   } else {
     document.getElementById('topXpFill').style.width='100%';
-    document.getElementById('topXpLabel').textContent='MAX – Abi-Shogun 👑';
+    document.getElementById('topXpLbl').textContent='MAX 👑';
   }
   document.getElementById('topStreak').textContent=S.streak;
   document.getElementById('topTokens').textContent=S.tokens;
 }
 
-// ============================================================
-// TOAST
-// ============================================================
+// ── TOAST ──────────────────────────────────────────────────
 function showToast(title,msg){
-  const t=document.createElement('div');
-  t.className='toast';
+  const t=document.createElement('div');t.className='toast';
   t.innerHTML=`<div class="toast-title">${title}</div>${msg?`<div class="toast-msg">${msg}</div>`:''}`;
   document.getElementById('toastContainer').appendChild(t);
-  setTimeout(()=>t.style.opacity='0',3500);
-  setTimeout(()=>t.remove(),4000);
+  setTimeout(()=>t.style.opacity='0',3500);setTimeout(()=>t.remove(),4000);
 }
 
-// ============================================================
-// STUNDENPLAN
-// ============================================================
-function pad(n){return String(n).padStart(2,'0')}
+// ── HELPER ─────────────────────────────────────────────────
+function pad(n){return String(n).padStart(2,'0');}
+function fmtDate(str){if(!str)return'–';const d=new Date(str);return d.toLocaleDateString('de-DE');}
+
+// ── STUNDENPLAN ────────────────────────────────────────────
 function getTimeslots(){
-  const slots=[];
-  let h=S.cfg.startH, m=S.cfg.startM;
+  const slots=[];let h=S.cfg.startH,m=S.cfg.startM;
   for(let i=0;i<S.cfg.blocks;i++){
     let eh=h,em=m+S.cfg.learn;
     if(em>=60){eh+=Math.floor(em/60);em=em%60;}
     slots.push({label:pad(h)+':'+pad(m)+'\n'+pad(eh)+':'+pad(em),key:'slot'+i});
     h=eh;m=em;
     if(i<S.cfg.blocks-1){
-      let ph=h,pm=m+S.cfg.pause;
-      if(pm>=60){ph++;pm-=60;}
-      slots.push({label:pad(h)+':'+pad(m)+'\n'+pad(ph)+':'+pad(pm),key:'pause'+i,isPause:true});
-      h=ph;m=pm;
+      let ph=h,pm=m+S.cfg.pause;if(pm>=60){ph++;pm-=60;}
+      slots.push({label:'Pause',key:'pause'+i,isPause:true});h=ph;m=pm;
     }
   }
   return slots;
 }
-
 function renderTimetable(){
-  const g=document.getElementById('ttGrid');
-  g.innerHTML='';
+  const g=document.getElementById('ttGrid');g.innerHTML='';
   const slots=getTimeslots();
-  // Header
   const corner=document.createElement('div');corner.className='tt-head';g.appendChild(corner);
   DAYS.forEach(d=>{const h=document.createElement('div');h.className='tt-head';h.textContent=d;g.appendChild(h);});
-  // Rows
   slots.forEach(sl=>{
     const td=document.createElement('div');
-    td.className='tt-time';td.textContent=sl.label;g.appendChild(td);
-    DAYS.forEach((d)=>{
+    td.className='tt-time';
+    td.innerHTML=sl.label.split('\n').map((l,i)=>`<span style="font-size:${i?'8':'9'}px">${l}</span>`).join('');
+    g.appendChild(td);
+    DAYS.forEach(d=>{
       const key=`${d}-${sl.key}`;
       const data=S.schedule[key];
+      if(sl.isPause){
+        const p=document.createElement('div');p.className='tt-pause';
+        p.innerHTML='<span class="tt-pause-lbl">PAUSE</span>';g.appendChild(p);return;
+      }
       const cell=document.createElement('div');
       cell.className='tt-slot'+(data?' filled':'');
-      if(sl.isPause){
-        cell.style.cssText='background:rgba(92,139,106,.06);min-height:24px;display:flex;align-items:center;justify-content:center';
-        const lbl=document.createElement('span');
-        lbl.style.cssText='font-size:9px;color:var(--green);opacity:.5;font-family:var(--font-mono)';
-        lbl.textContent='PAUSE';
-        cell.appendChild(lbl);
-        g.appendChild(cell);return;
-      }
       if(data){
-        cell.classList.add('fach-'+data.fach.replace(/\s/g,''));
+        const fc=`fc-${data.fach.replace(/\s/g,'')}`;
+        cell.classList.add(fc);
         cell.innerHTML=`<div class="tt-slot-name">${data.fach}</div>${data.note?`<div class="tt-slot-note">${data.note}</div>`:''}`;
-        const del=document.createElement('button');
-        del.className='tt-slot-del';del.innerHTML='✕';del.title='Löschen';
+        const del=document.createElement('button');del.className='tt-slot-del';del.textContent='✕';
         del.addEventListener('click',e=>{e.stopPropagation();delete S.schedule[key];save();renderTimetable();});
         cell.appendChild(del);
-        cell.addEventListener('click',()=>openSlotModal(key,sl,data));
+        cell.addEventListener('click',()=>openSlotModal(key,data));
       } else {
-        const plus=document.createElement('span');plus.className='tt-add-icon';plus.innerHTML='+';cell.appendChild(plus);
-        cell.addEventListener('click',()=>openSlotModal(key,sl,null));
+        const plus=document.createElement('span');plus.className='tt-add';plus.textContent='+';cell.appendChild(plus);
+        cell.addEventListener('click',()=>openSlotModal(key,null));
       }
       g.appendChild(cell);
     });
   });
 }
-
-function openSlotModal(key,sl,data){
-  const fachOpts=FAECHER.map(f=>`<option value="${f}"${data&&data.fach===f?' selected':''}>${f}</option>`).join('');
-  showModal(`<div class="modal-title">${data?'Bearbeiten':'Fach eintragen'}</div>
-    <div class="field"><label>Fach</label><select id="mFach">${fachOpts}</select></div>
-    <div class="field"><label>Thema / Notiz</label><input type="text" id="mNote" value="${data?data.note||'':''}" placeholder="z.B. Analysis Kap. 3…"/></div>
+function openSlotModal(key,data){
+  const opts=FAECHER.map(f=>`<option${data&&data.fach===f?' selected':''}>${f}</option>`).join('');
+  showModal(`<div class="modal-title">${data?'Fach bearbeiten':'Fach eintragen'}</div>
+    <div class="field"><label>Fach</label><select id="mFach">${opts}</select></div>
+    <div class="field"><label>Thema / Notiz</label><input id="mNote" value="${data?data.note||'':''}" placeholder="z.B. Analysis Kap. 3"/></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-gold" onclick="saveSlot('${key}')">Speichern</button>
@@ -858,310 +881,262 @@ function saveSlot(key){
   save();closeModal();renderTimetable();
 }
 
-// ESA mini
 function renderESAMini(){
-  const wrap=document.getElementById('esaMini');
   const now=new Date();
-  const upcoming=(S.calEvents||[])
+  const list=(S.calEvents||[])
     .filter(e=>e.type==='esa'||e.type==='exam')
     .map(e=>({...e,d:new Date(e.date)}))
     .filter(e=>e.d>=now)
-    .sort((a,b)=>a.d-b.d)
-    .slice(0,4);
-  if(!upcoming.length){wrap.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:13px">Keine bevorstehenden ESA-Termine. Im Kalender eintragen!</div>';return;}
-  wrap.innerHTML=upcoming.map(ev=>{
-    const diff=Math.ceil((ev.d-now)/(86400000));
-    const urgency=diff<=7?'color:var(--red)':diff<=14?'color:var(--warm)':'color:var(--green)';
-    return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span style="font-family:var(--font-mono);font-size:12px;color:var(--text3);min-width:80px">${ev.d.toLocaleDateString('de-DE')}</span>
+    .sort((a,b)=>a.d-b.d).slice(0,5);
+  const w=document.getElementById('esaMini');
+  if(!list.length){w.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:13px">Keine Termine. Im Kalender eintragen!</div>';return;}
+  w.innerHTML=list.map(ev=>{
+    const diff=Math.ceil((ev.d-now)/86400000);
+    const col=diff<=7?'var(--red)':diff<=14?'var(--gold)':'var(--green)';
+    return`<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-family:var(--font-m);font-size:11px;color:var(--text3);min-width:76px">${ev.d.toLocaleDateString('de-DE')}</span>
       <span style="flex:1;font-size:13px">${ev.title}</span>
-      <span style="font-family:var(--font-mono);font-size:12px;${urgency}">${diff>0?'noch '+diff+'d':'HEUTE'}</span>
+      <span style="font-family:var(--font-m);font-size:11px;color:${col}">${diff===0?'HEUTE':'noch '+diff+'d'}</span>
     </div>`;
   }).join('');
 }
 
-// ============================================================
-// TIMER
-// ============================================================
-const timerBlocks=[];
-let timerCur=0, timerTick=null, timerSecs=0, timerRunning=false, xpThisSession=0, timerDone=0;
+// ── TIMER ──────────────────────────────────────────────────
+let tBlocks=[],tCur=0,tTick=null,tSecs=0,tRunning=false,tXP=0,tDone=0;
 
-function buildTimerBlocks(){
-  timerBlocks.length=0;
+function buildBlocks(){
+  tBlocks=[];
   let h=S.cfg.startH,m=S.cfg.startM;
   for(let i=0;i<S.cfg.blocks;i++){
-    let eh=h,em=m+S.cfg.learn;
-    if(em>=60){eh+=Math.floor(em/60);em=em%60;}
-    timerBlocks.push({type:'learn',num:i+1,startH:h,startM:m,endH:eh,endM:em,dur:S.cfg.learn});
+    let eh=h,em=m+S.cfg.learn;if(em>=60){eh+=Math.floor(em/60);em%=60;}
+    tBlocks.push({type:'learn',num:i+1,sh:h,sm:m,eh,em,dur:S.cfg.learn});
     h=eh;m=em;
     if(i<S.cfg.blocks-1){
       let ph=h,pm=m+S.cfg.pause;if(pm>=60){ph++;pm-=60;}
-      timerBlocks.push({type:'pause',startH:h,startM:m,endH:ph,endM:pm,dur:S.cfg.pause});
+      tBlocks.push({type:'pause',sh:h,sm:m,eh:ph,em:pm,dur:S.cfg.pause});
       h=ph;m=pm;
     }
   }
   document.getElementById('tmEnd').textContent=pad(h)+':'+pad(m);
-  document.getElementById('tmDone').textContent='0/'+S.cfg.blocks;
+  document.getElementById('tmDone').textContent='0';
 }
-
-function renderTimerPips(){
+function renderPips(){
   const c=document.getElementById('timerPips');c.innerHTML='';
-  timerBlocks.forEach((b,i)=>{
-    const pip=document.createElement('div');
-    let cls='timer-pip';
-    if(b.type==='pause'){cls+=i<timerCur?' pause-done':i===timerCur&&timerRunning?' pause-active':'';}
-    else{cls+=i<timerCur?' learn-done':i===timerCur&&timerRunning?' learn-active':'';}
-    pip.className=cls;pip.title=b.type==='learn'?`Einheit ${b.num}`:'Pause';
-    c.appendChild(pip);
+  tBlocks.forEach((b,i)=>{
+    const p=document.createElement('div');
+    let cls='pip';
+    if(b.type==='learn'){cls+=i<tCur?' l-done':i===tCur&&tRunning?' l-active':'';}
+    else{cls+=i<tCur?' p-done':i===tCur&&tRunning?' p-active':'';}
+    p.className=cls;p.title=b.type==='learn'?`Einheit ${b.num}`:'Pause';
+    c.appendChild(p);
   });
 }
-
-function loadTimerBlock(i){
-  if(i>=timerBlocks.length){
+function loadBlock(i){
+  if(i>=tBlocks.length){
     document.getElementById('timerDisp').textContent='✓';
-    document.getElementById('timerName').textContent='Alle Einheiten abgeschlossen! 🎌';
+    document.getElementById('timerLabel').textContent='Alle Einheiten abgeschlossen! 🎌';
     document.getElementById('timerFill').style.width='100%';
-    document.getElementById('timerStart').textContent='▶ Starten';
-    timerRunning=false;renderTimerPips();return;
+    document.getElementById('timerStart').textContent='▶ Start';
+    tRunning=false;renderPips();return;
   }
-  timerCur=i;const b=timerBlocks[i];
-  timerSecs=b.dur*60;
+  tCur=i;const b=tBlocks[i];tSecs=b.dur*60;
   document.getElementById('timerDisp').textContent=pad(b.dur)+':00';
-  document.getElementById('timerName').textContent=(b.type==='learn'?`Lerneinheit ${b.num}`:'Pause')+` · ${pad(b.startH)}:${pad(b.startM)}–${pad(b.endH)}:${pad(b.endM)}`;
+  document.getElementById('timerLabel').textContent=(b.type==='learn'?`Einheit ${b.num}`:'Pause')+` · ${pad(b.sh)}:${pad(b.sm)}–${pad(b.eh)}:${pad(b.em)}`;
   document.getElementById('timerFill').style.width='0%';
-  renderTimerPips();
+  renderPips();
 }
-
-function timerTickFn(){
-  timerSecs--;
-  const b=timerBlocks[timerCur];
-  const total=b.dur*60;
-  const pct=Math.round(((total-timerSecs)/total)*100);
-  document.getElementById('timerFill').style.width=pct+'%';
-  document.getElementById('timerDisp').textContent=pad(Math.floor(timerSecs/60))+':'+pad(timerSecs%60);
-  if(timerSecs<=0){
-    clearInterval(timerTick);timerRunning=false;
+function tickFn(){
+  tSecs--;
+  const b=tBlocks[tCur],total=b.dur*60;
+  document.getElementById('timerFill').style.width=Math.round(((total-tSecs)/total)*100)+'%';
+  document.getElementById('timerDisp').textContent=pad(Math.floor(tSecs/60))+':'+pad(tSecs%60);
+  if(tSecs<=0){
+    clearInterval(tTick);tRunning=false;
     if(b.type==='learn'){
-      timerDone++;S.sessions++;
-      S.sessions_today=(S.sessions_today||0)+1;
-      checkStreak();
-      // Daily log sessions
-      const td=todayStr();
-      if(!S.dailyLog[td])S.dailyLog[td]={sessions:0,xp:0};
+      tDone++;S.sessions++;S.sessions_today=(S.sessions_today||0)+1;
+      const td=todayStr();if(!S.dailyLog[td])S.dailyLog[td]={sessions:0,xp:0};
       S.dailyLog[td].sessions++;
-      const streakBonus=S.streak>1?Math.min(S.streak*2,30):0;
-      const xpGain=50+streakBonus;
-      addXP(xpGain);addTokens(5);xpThisSession+=xpGain;
-      document.getElementById('tmDone').textContent=timerDone+'/'+S.cfg.blocks;
-      document.getElementById('tmXP').textContent='+'+xpThisSession;
+      // STREAK: counts on first unit of the day
+      markStreak();
+      const bonus=S.streak>1?Math.min(S.streak*2,30):0;
+      const xpGain=50+bonus;
+      addXP(xpGain);addTokens(2);tXP+=xpGain;
+      document.getElementById('tmDone').textContent=tDone;
+      document.getElementById('tmXP').textContent='+'+tXP;
       if(new Date().getHours()<6)S.early_starts=(S.early_starts||0)+1;
-      save();checkBadges();checkStreakDecay();
-      showToast(`+${xpGain} XP · +5 🪙`,`Einheit ${b.num} abgeschlossen!${streakBonus?` · Streak-Bonus +${streakBonus} XP`:''}`);
+      save();checkBadges();checkStreakUI();
+      showToast(`+${xpGain} XP · +2 🪙`,`Einheit ${b.num} fertig!${bonus?` · Streak +${bonus} XP`:''}`);
     }
-    document.getElementById('timerStart').textContent='▶ Starten';
-    loadTimerBlock(timerCur+1);
+    document.getElementById('timerStart').textContent='▶ Start';
+    loadBlock(tCur+1);
   }
 }
-
 document.getElementById('timerStart').addEventListener('click',()=>{
-  if(timerCur>=timerBlocks.length)return;
-  if(timerRunning){clearInterval(timerTick);timerRunning=false;document.getElementById('timerStart').textContent='▶ Weiter';}
-  else{timerTick=setInterval(timerTickFn,1000);timerRunning=true;document.getElementById('timerStart').textContent='⏸ Pause';renderTimerPips();}
+  if(tCur>=tBlocks.length)return;
+  if(tRunning){clearInterval(tTick);tRunning=false;document.getElementById('timerStart').textContent='▶ Weiter';}
+  else{tTick=setInterval(tickFn,1000);tRunning=true;document.getElementById('timerStart').textContent='⏸ Pause';renderPips();}
 });
-document.getElementById('timerSkip').addEventListener('click',()=>{if(!timerRunning&&timerCur<timerBlocks.length)loadTimerBlock(timerCur+1);});
+document.getElementById('timerSkip').addEventListener('click',()=>{if(!tRunning&&tCur<tBlocks.length)loadBlock(tCur+1);});
 document.getElementById('timerReset').addEventListener('click',()=>{
-  clearInterval(timerTick);timerRunning=false;timerCur=0;timerDone=0;xpThisSession=0;S.sessions_today=0;
-  document.getElementById('timerStart').textContent='▶ Starten';
+  clearInterval(tTick);tRunning=false;tCur=0;tDone=0;tXP=0;S.sessions_today=0;
+  document.getElementById('timerStart').textContent='▶ Start';
   document.getElementById('tmXP').textContent='+0';
-  buildTimerBlocks();loadTimerBlock(0);
+  buildBlocks();loadBlock(0);
 });
 
-// ============================================================
-// KALENDER
-// ============================================================
-let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
-
-function renderCalendar(){
-  const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-  const WDAYS=['Mo','Di','Mi','Do','Fr','Sa','So'];
-  document.getElementById('calTitle').textContent=`${MONTHS[calMonth]} ${calYear}`;
-  const grid=document.getElementById('calGrid');
-  grid.innerHTML='';
-  // Headers
-  WDAYS.forEach(d=>{const h=document.createElement('div');h.className='cal-head';h.textContent=d;grid.appendChild(h);});
-  // Days
-  const first=new Date(calYear,calMonth,1);
-  let startDow=(first.getDay()+6)%7; // Mon=0
-  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
-  const today=new Date();
-  // Padding from prev month
-  for(let i=0;i<startDow;i++){
-    const div=document.createElement('div');div.className='cal-day other-month';
-    const prevDay=new Date(calYear,calMonth,1-startDow+i);
-    div.innerHTML=`<div class="cal-day-num">${prevDay.getDate()}</div>`;
-    grid.appendChild(div);
-  }
-  for(let d=1;d<=daysInMonth;d++){
-    const date=new Date(calYear,calMonth,d);
-    const dateStr=date.toISOString().split('T')[0];
-    const isToday=date.toDateString()===today.toDateString();
-    const events=(S.calEvents||[]).filter(e=>e.date===dateStr);
-    const learned=S.dailyLog[date.toDateString()]?.sessions>0;
-    const div=document.createElement('div');
-    div.className='cal-day'+(isToday?' today':'')+(events.length?' has-event':'')+(learned?' learned':'');
-    div.innerHTML=`<div class="cal-day-num">${d}</div>${events.slice(0,2).map(e=>`<span class="cal-event-chip" style="background:${eventColor(e.type)}">${e.title}</span>`).join('')}`;
-    div.addEventListener('click',()=>openCalDayModal(dateStr,events));
-    grid.appendChild(div);
-  }
-  renderUpcomingEvents();
-}
+// ── KALENDER ───────────────────────────────────────────────
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
+const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 
 function eventColor(type){
-  const c={exam:'#b85c4a',esa:'#8b6f47',free:'#5c8b6a',reminder:'#4a7a8b',other:'#7a6a8b'};
-  return c[type]||c.other;
+  return{exam:'#c0392b',esa:'#c17c2e',free:'#27ae60',reminder:'#2980b9',other:'#7a6ab4'}[type]||'#7a6ab4';
 }
-
-function renderUpcomingEvents(){
+function renderCalendar(){
+  document.getElementById('calTitle').textContent=`${MONTHS[calMonth]} ${calYear}`;
+  const grid=document.getElementById('calGrid');grid.innerHTML='';
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d=>{
+    const h=document.createElement('div');h.className='cal-head';h.textContent=d;grid.appendChild(h);
+  });
+  const first=new Date(calYear,calMonth,1);
+  const startDow=(first.getDay()+6)%7;
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  for(let i=0;i<startDow;i++){
+    const prev=new Date(calYear,calMonth,1-startDow+i);
+    const div=document.createElement('div');div.className='cal-day other-month';
+    div.innerHTML=`<div class="cal-day-num">${prev.getDate()}</div>`;grid.appendChild(div);
+  }
+  for(let d=1;d<=days;d++){
+    const date=new Date(calYear,calMonth,d);
+    const ds=date.toISOString().split('T')[0];
+    const isToday=date.toDateString()===today.toDateString();
+    const evs=(S.calEvents||[]).filter(e=>e.date===ds);
+    const learned=(S.dailyLog[date.toDateString()]?.sessions||0)>0;
+    const div=document.createElement('div');
+    div.className='cal-day'+(isToday?' today':'')+(learned?' learned':'');
+    div.innerHTML=`<div class="cal-day-num">${d}</div>${evs.slice(0,2).map(e=>`<span class="cal-chip" style="background:${eventColor(e.type)}">${e.title}</span>`).join('')}`;
+    div.addEventListener('click',()=>openCalDay(ds,evs));
+    grid.appendChild(div);
+  }
+  renderUpcoming();
+}
+function renderUpcoming(){
   const now=new Date();now.setHours(0,0,0,0);
-  const upcoming=(S.calEvents||[])
-    .map(e=>({...e,d:new Date(e.date)}))
-    .filter(e=>e.d>=now)
-    .sort((a,b)=>a.d-b.d)
-    .slice(0,8);
-  const wrap=document.getElementById('upcomingEvents');
-  if(!upcoming.length){wrap.innerHTML='<div style="color:var(--text3);font-style:italic;padding:12px 0;font-size:13px">Keine kommenden Termine</div>';return;}
-  wrap.innerHTML=upcoming.map(ev=>{
+  const list=(S.calEvents||[]).map(e=>({...e,d:new Date(e.date)})).filter(e=>e.d>=now).sort((a,b)=>a.d-b.d).slice(0,8);
+  const w=document.getElementById('upcomingEvents');
+  if(!list.length){w.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:13px;padding:10px 0">Keine kommenden Termine</div>';return;}
+  w.innerHTML=list.map(ev=>{
     const diff=Math.ceil((ev.d-now)/86400000);
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-      <span style="width:10px;height:10px;border-radius:50%;background:${eventColor(ev.type)};flex-shrink:0"></span>
-      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3);min-width:80px">${ev.d.toLocaleDateString('de-DE')}</span>
+    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span style="width:8px;height:8px;border-radius:50%;background:${eventColor(ev.type)};flex-shrink:0"></span>
+      <span style="font-family:var(--font-m);font-size:11px;color:var(--text3);min-width:76px">${ev.d.toLocaleDateString('de-DE')}</span>
       <span style="flex:1;font-size:13px">${ev.title}</span>
-      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">${diff===0?'Heute':diff+'d'}</span>
-      <button class="btn btn-sm btn-red" onclick="deleteEvent('${ev.id}')">✕</button>
+      <span style="font-family:var(--font-m);font-size:11px;color:var(--text3)">${diff===0?'Heute':diff+'d'}</span>
+      <button class="btn btn-sm btn-red" onclick="delEvent('${ev.id}')">✕</button>
     </div>`;
   }).join('');
 }
-
-function openCalDayModal(dateStr,events){
-  const d=new Date(dateStr);
-  const evHtml=events.length?events.map(e=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="width:8px;height:8px;border-radius:50%;background:${eventColor(e.type)};flex-shrink:0"></span><span style="flex:1;font-size:13px">${e.title}</span><button class="btn btn-sm btn-red" onclick="deleteEvent('${e.id}');closeModal()">✕</button></div>`).join(''):'<div style="color:var(--text3);font-style:italic;font-size:12px;margin-bottom:12px">Keine Einträge</div>';
+function openCalDay(ds,evs){
+  const d=new Date(ds);
+  const evHtml=evs.map(e=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+    <span style="width:7px;height:7px;border-radius:50%;background:${eventColor(e.type)};flex-shrink:0"></span>
+    <span style="flex:1;font-size:13px">${e.title}</span>
+    <button class="btn btn-sm btn-red" onclick="delEvent('${e.id}');closeModal()">✕</button>
+  </div>`).join('')||'<div style="color:var(--text3);font-style:italic;font-size:12px;margin-bottom:10px">Keine Einträge</div>';
   showModal(`<div class="modal-title">${d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div>
-    ${evHtml}
-    <hr class="sep"/>
-    <div class="field"><label>Titel</label><input type="text" id="evTitle" placeholder="z.B. Mathe ESA, Freier Tag…"/></div>
-    <div class="field"><label>Typ</label>
-      <select id="evType">
-        <option value="exam">📝 Prüfung / Klausur</option>
-        <option value="esa">📋 ESA</option>
-        <option value="free">🌴 Freier Tag</option>
-        <option value="reminder">🔔 Erinnerung</option>
-        <option value="other">📌 Sonstiges</option>
-      </select>
-    </div>
-    <div class="field"><label>Notiz</label><input type="text" id="evNote" placeholder="optional…"/></div>
+    ${evHtml}<hr class="sep"/>
+    <div class="field"><label>Titel</label><input id="evTitle" placeholder="z.B. Mathe ESA"/></div>
+    <div class="field"><label>Typ</label><select id="evType">
+      <option value="exam">📝 Prüfung</option><option value="esa">📋 ESA</option>
+      <option value="free">🌴 Freier Tag</option><option value="reminder">🔔 Erinnerung</option><option value="other">📌 Sonstiges</option>
+    </select></div>
+    <div class="field"><label>Notiz</label><input id="evNote" placeholder="optional"/></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Schließen</button>
-      <button class="btn btn-gold" onclick="saveCalEvent('${dateStr}')">Hinzufügen</button>
+      <button class="btn btn-gold" onclick="saveCalDay('${ds}')">Hinzufügen</button>
     </div>`);
 }
-
-function saveCalEvent(dateStr){
-  const title=document.getElementById('evTitle').value.trim();
-  if(!title)return;
-  S.calEvents=(S.calEvents||[]);
-  S.calEvents.push({id:'ev'+Date.now(),date:dateStr,title,type:document.getElementById('evType').value,note:document.getElementById('evNote').value.trim()});
+function saveCalDay(ds){
+  const t=document.getElementById('evTitle').value.trim();if(!t)return;
+  S.calEvents.push({id:'ev'+Date.now(),date:ds,title:t,type:document.getElementById('evType').value,note:(document.getElementById('evNote').value||'').trim()});
   save();closeModal();renderCalendar();renderESAMini();
 }
-function deleteEvent(id){S.calEvents=(S.calEvents||[]).filter(e=>e.id!==id);save();renderCalendar();renderESAMini();}
-window.deleteEvent=deleteEvent;
+function delEvent(id){S.calEvents=(S.calEvents||[]).filter(e=>e.id!==id);save();renderCalendar();renderESAMini();}
+window.delEvent=delEvent;window.saveCalDay=saveCalDay;
 
 document.getElementById('addEventBtn').addEventListener('click',()=>{
   const today=new Date().toISOString().split('T')[0];
-  showModal(`<div class="modal-title">Neuer Eintrag</div>
+  showModal(`<div class="modal-title">Neuer Termin</div>
     <div class="field"><label>Datum</label><input type="date" id="evDate" value="${today}"/></div>
-    <div class="field"><label>Titel</label><input type="text" id="evTitle" placeholder="z.B. Mathematik ESA"/></div>
-    <div class="field"><label>Typ</label>
-      <select id="evType">
-        <option value="exam">📝 Prüfung / Klausur</option>
-        <option value="esa">📋 ESA</option>
-        <option value="free">🌴 Freier Tag</option>
-        <option value="reminder">🔔 Erinnerung</option>
-        <option value="other">📌 Sonstiges</option>
-      </select>
-    </div>
-    <div class="field"><label>Notiz</label><input type="text" id="evNote" placeholder="optional…"/></div>
+    <div class="field"><label>Titel</label><input id="evTitle" placeholder="z.B. Mathematik ESA"/></div>
+    <div class="field"><label>Typ</label><select id="evType">
+      <option value="exam">📝 Prüfung</option><option value="esa">📋 ESA</option>
+      <option value="free">🌴 Freier Tag</option><option value="reminder">🔔 Erinnerung</option><option value="other">📌 Sonstiges</option>
+    </select></div>
+    <div class="field"><label>Notiz</label><input id="evNote" placeholder="optional"/></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Abbrechen</button>
-      <button class="btn btn-gold" onclick="saveCalEventFromModal()">Hinzufügen</button>
+      <button class="btn btn-gold" onclick="saveNewEvent()">Hinzufügen</button>
     </div>`);
 });
-function saveCalEventFromModal(){
-  const title=document.getElementById('evTitle').value.trim();
-  const date=document.getElementById('evDate').value;
-  if(!title||!date)return;
-  S.calEvents=(S.calEvents||[]);
-  S.calEvents.push({id:'ev'+Date.now(),date,title,type:document.getElementById('evType').value,note:document.getElementById('evNote').value.trim()});
+function saveNewEvent(){
+  const t=document.getElementById('evTitle').value.trim(),dt=document.getElementById('evDate').value;
+  if(!t||!dt)return;
+  S.calEvents.push({id:'ev'+Date.now(),date:dt,title:t,type:document.getElementById('evType').value,note:(document.getElementById('evNote').value||'').trim()});
   save();closeModal();renderCalendar();renderESAMini();
 }
-window.saveCalEventFromModal=saveCalEventFromModal;
-
+window.saveNewEvent=saveNewEvent;
 document.getElementById('calPrev').addEventListener('click',()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();});
 document.getElementById('calNext').addEventListener('click',()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();});
-function saveCalEvent2(ds){saveCalEvent(ds);}
-window.saveCalEvent=saveCalEvent;
 
-// ============================================================
-// HEFTE
-// ============================================================
+// ── HEFTE ──────────────────────────────────────────────────
 function renderHefte(){
   const list=document.getElementById('hefteList');
   if(!S.hefte.length){list.innerHTML='<div style="text-align:center;padding:3rem;color:var(--text3);font-style:italic">Noch keine Hefte eingetragen</div>';return;}
   list.innerHTML='';
   S.hefte.forEach((h,i)=>{
     const pct=h.pages>0?Math.round((h.done/h.pages)*100):0;
-    let estimate='';
+    let est='';
     if(h.sessions>0&&h.done>0&&h.pages>h.done){
       const pps=h.done/h.sessions;const rem=h.pages-h.done;
-      estimate=`≈ ${Math.ceil(rem/pps)} Einheiten verbleibend`;
-    } else if(h.done>=h.pages&&h.pages>0) estimate='✓ Abgeschlossen!';
-    const div=document.createElement('div');div.className='heft-item';
+      est=`≈ ${Math.ceil(rem/pps)} Einheiten übrig`;
+    } else if(h.done>=h.pages&&h.pages>0)est='✓ Abgeschlossen';
+    const div=document.createElement('div');div.className='heft';
     div.innerHTML=`<div class="heft-top">
-      <span class="heft-fach-tag fach-${h.fach}">${h.fach}</span>
-      <span class="heft-name">${h.name}</span>
+      <span class="fach-tag fc-${h.fach}">${h.fach}</span>
+      <span style="flex:1;font-size:13px;font-weight:500">${h.name}</span>
       <button class="btn btn-sm btn-gold" onclick="openLogSession(${i})">📖 Lernen</button>
-      <button class="btn btn-sm btn-red" onclick="deleteHeft(${i})">✕</button>
+      <button class="btn btn-sm btn-red" onclick="delHeft(${i})">✕</button>
     </div>
-    <div class="heft-progress"><div class="heft-progress-fill fach-bg-${h.fach}" style="width:${pct}%"></div></div>
-    <div class="heft-stats"><span>Seite ${h.done} / ${h.pages}</span><span>${pct}%</span><span>${estimate}</span></div>`;
+    <div class="heft-bar"><div class="heft-bar-fill fbg-${h.fach}" style="width:${pct}%"></div></div>
+    <div class="heft-stats"><span>Seite ${h.done} / ${h.pages}</span><span>${pct}%</span><span>${est}</span></div>`;
     list.appendChild(div);
   });
 }
-
-function deleteHeft(i){if(confirm('Heft löschen?')){S.hefte.splice(i,1);save();renderHefte();}}
+function delHeft(i){if(confirm('Heft löschen?')){S.hefte.splice(i,1);save();renderHefte();}}
 function openLogSession(i){
   const h=S.hefte[i];
-  showModal(`<div class="modal-title">Lernfortschritt eintragen</div>
-    <div style="margin-bottom:12px"><span class="heft-fach-tag fach-${h.fach}">${h.fach}</span> <strong>${h.name}</strong></div>
-    <div class="field"><label>Aktuelle Seite (bisher: ${h.done})</label><input type="number" id="lgPage" value="${h.done}" min="0" max="${h.pages}"/></div>
-    <div class="field"><label>Notiz</label><input type="text" id="lgNote" placeholder="Was hast du heute gemacht?"/></div>
+  showModal(`<div class="modal-title">Lernfortschritt</div>
+    <div style="margin-bottom:12px"><span class="fach-tag fc-${h.fach}">${h.fach}</span> <strong>${h.name}</strong></div>
+    <div class="field"><label>Aktuelle Seite (bisher ${h.done})</label><input type="number" id="lgPage" value="${h.done}" min="0" max="${h.pages}"/></div>
+    <div class="field"><label>Notiz</label><input id="lgNote" placeholder="Was hast du heute gemacht?"/></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Abbrechen</button>
-      <button class="btn btn-gold" onclick="logHeftSession(${i})">Speichern</button>
+      <button class="btn btn-gold" onclick="logHeft(${i})">Speichern</button>
     </div>`);
 }
-function logHeftSession(i){
-  const page=parseInt(document.getElementById('lgPage').value)||0;
+function logHeft(i){
+  const p=parseInt(document.getElementById('lgPage').value)||0;
   const h=S.hefte[i];const prev=h.done;
-  h.done=Math.min(page,h.pages);h.sessions=(h.sessions||0)+1;
+  h.done=Math.min(p,h.pages);h.sessions=(h.sessions||0)+1;
   if(h.done>=h.pages&&prev<h.pages){S.hefts_done=(S.hefts_done||0)+1;showToast('📓 Heft abgeschlossen!',h.name);checkBadges();}
   save();closeModal();renderHefte();
 }
-
 document.getElementById('addHeftBtn').addEventListener('click',()=>{
-  const fachOpts=FAECHER.map(f=>`<option>${f}</option>`).join('');
+  const opts=FAECHER.map(f=>`<option>${f}</option>`).join('');
   showModal(`<div class="modal-title">Neues Heft</div>
-    <div class="field"><label>Fach</label><select id="hFach">${fachOpts}</select></div>
-    <div class="field"><label>Heftname</label><input type="text" id="hName" placeholder="z.B. Analysis, Grammatik…"/></div>
+    <div class="field"><label>Fach</label><select id="hFach">${opts}</select></div>
+    <div class="field"><label>Heftname</label><input id="hName" placeholder="z.B. Analysis, Grammatik…"/></div>
     <div class="field"><label>Gesamtseiten</label><input type="number" id="hPages" value="80" min="1"/></div>
     <div class="field"><label>Bereits erledigt (Seite)</label><input type="number" id="hDone" value="0" min="0"/></div>
     <div class="modal-actions">
@@ -1174,82 +1149,73 @@ function saveHeft(){
     pages:parseInt(document.getElementById('hPages').value)||80,done:parseInt(document.getElementById('hDone').value)||0,sessions:0});
   save();closeModal();renderHefte();
 }
+window.delHeft=delHeft;window.openLogSession=openLogSession;window.logHeft=logHeft;window.saveHeft=saveHeft;
 
-// ============================================================
-// NOTEN
-// ============================================================
+// ── NOTEN ──────────────────────────────────────────────────
 function gradeLabel(n){
-  const g=Math.round(n);
-  if(g<=1)return{label:'1',cls:'grade-1'};
-  if(g<=2)return{label:'2',cls:'grade-2'};
-  if(g<=3)return{label:'3',cls:'grade-3'};
-  if(g<=4)return{label:'4',cls:'grade-4'};
-  if(g<=5)return{label:'5',cls:'grade-5'};
-  return{label:'6',cls:'grade-6'};
+  const g=Math.round(n*2)/2;
+  if(g<=1)return{cls:'g1'};if(g<=2)return{cls:'g2'};if(g<=3)return{cls:'g3'};
+  if(g<=4)return{cls:'g4'};if(g<=5)return{cls:'g5'};return{cls:'g6'};
 }
-function gradeFromPoints(p){
-  // Punkte 0-15 -> Note
+function gradeFromPts(p){
   if(p>=15)return 1;if(p>=13)return 1.3;if(p>=11)return 1.7;
   if(p>=10)return 2;if(p>=9)return 2.3;if(p>=8)return 2.7;
   if(p>=7)return 3;if(p>=6)return 3.3;if(p>=5)return 3.7;
   if(p>=4)return 4;if(p>=3)return 4.3;if(p>=2)return 4.7;
   if(p>=1)return 5;return 6;
 }
-
 function renderNoten(){
-  const grades=S.grades||[];
-  const tbody=document.getElementById('gradeBody');
-  const empty=document.getElementById('gradeEmpty');
-  if(!grades.length){tbody.innerHTML='';empty.style.display='block';
+  const gs=S.grades||[];
+  const tb=document.getElementById('gradeBody'),em=document.getElementById('gradeEmpty');
+  if(!gs.length){tb.innerHTML='';em.style.display='block';
     document.getElementById('noteAvg').textContent='–';document.getElementById('noteCount').textContent='0';}
   else{
-    empty.style.display='none';
-    const avg=(grades.reduce((a,g)=>a+g.note,0)/grades.length).toFixed(2);
+    em.style.display='none';
+    const avg=(gs.reduce((a,g)=>a+g.note,0)/gs.length).toFixed(2);
     document.getElementById('noteAvg').textContent=avg;
-    document.getElementById('noteCount').textContent=grades.length;
-    tbody.innerHTML=grades.map((g,i)=>{
+    document.getElementById('noteCount').textContent=gs.length;
+    tb.innerHTML=gs.map((g,i)=>{
       const gl=gradeLabel(g.note);
-      return `<tr>
-        <td><span class="heft-fach-tag fach-${g.fach}" style="padding:2px 7px;border-radius:99px;font-size:11px">${g.fach}</span></td>
+      return`<tr>
+        <td><span class="fach-tag fc-${g.fach}" style="font-size:10px;padding:1px 7px;border-radius:20px">${g.fach}</span></td>
         <td style="color:var(--text2);font-size:12px">${g.typ}</td>
-        <td style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">${g.datum||'–'}</td>
-        <td><span class="grade-chip ${gl.cls}">${g.note}</span></td>
-        <td style="font-family:var(--font-mono);font-size:12px;color:var(--text2)">${g.punkte!==undefined?g.punkte+'/15':'–'}</td>
+        <td style="font-family:var(--font-m);font-size:11px;color:var(--text3)">${g.datum||'–'}</td>
+        <td><span class="gchip ${gl.cls}">${g.note}</span></td>
+        <td style="font-family:var(--font-m);font-size:12px">${g.punkte!==undefined?g.punkte+'/15':'–'}</td>
         <td style="font-size:12px;color:var(--text3);font-style:italic">${g.notiz||''}</td>
-        <td><button class="btn btn-sm btn-red" onclick="deleteGrade(${i})">✕</button></td>
+        <td><button class="btn btn-sm btn-red" onclick="delGrade(${i})">✕</button></td>
       </tr>`;
     }).join('');
   }
-  renderFachAverages();
+  renderFachAvg();
 }
-function deleteGrade(i){if(confirm('Note löschen?')){S.grades.splice(i,1);save();renderNoten();}}
-function renderFachAverages(){
+function delGrade(i){if(confirm('Note löschen?')){S.grades.splice(i,1);save();renderNoten();}}
+function renderFachAvg(){
   const map={};(S.grades||[]).forEach(g=>{if(!map[g.fach])map[g.fach]=[];map[g.fach].push(g.note);});
-  const wrap=document.getElementById('fachAverages');
-  if(!Object.keys(map).length){wrap.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:12px">Noch keine Noten</div>';return;}
-  wrap.innerHTML=Object.entries(map).map(([fach,ns])=>{
+  const w=document.getElementById('fachAverages');
+  if(!Object.keys(map).length){w.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:12px">Noch keine Noten</div>';return;}
+  w.innerHTML=Object.entries(map).map(([f,ns])=>{
     const avg=(ns.reduce((a,b)=>a+b,0)/ns.length).toFixed(2);
     const gl=gradeLabel(parseFloat(avg));
-    return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span class="heft-fach-tag fach-${fach}" style="padding:2px 7px;border-radius:99px;font-size:11px">${fach}</span>
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span class="fach-tag fc-${f}" style="font-size:10px;padding:1px 7px;border-radius:20px">${f}</span>
       <span style="flex:1;font-size:12px;color:var(--text2)">${ns.length} Note${ns.length>1?'n':''}</span>
-      <span class="grade-chip ${gl.cls}">${avg}</span>
+      <span class="gchip ${gl.cls}">${avg}</span>
     </div>`;
   }).join('');
 }
-
 document.getElementById('addNoteBtn').addEventListener('click',()=>{
-  const fachOpts=FAECHER.map(f=>`<option>${f}</option>`).join('');
-  const typOpts=NOTE_TYPEN.map(t=>`<option>${t}</option>`).join('');
+  const fo=FAECHER.map(f=>`<option>${f}</option>`).join('');
+  const to=NOTE_TYPEN.map(t=>`<option>${t}</option>`).join('');
   showModal(`<div class="modal-title">Note eintragen</div>
-    <div class="field"><label>Fach</label><select id="nFach">${fachOpts}</select></div>
-    <div class="field"><label>Typ</label><select id="nTyp">${typOpts}</select></div>
+    <div class="field"><label>Fach</label><select id="nFach">${fo}</select></div>
+    <div class="field"><label>Typ</label><select id="nTyp">${to}</select></div>
     <div class="field"><label>Datum</label><input type="date" id="nDatum" value="${new Date().toISOString().split('T')[0]}"/></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="g2">
       <div class="field"><label>Note (1–6)</label><input type="number" id="nNote" value="3" step="0.1" min="1" max="6"/></div>
-      <div class="field"><label>Punkte (0–15, opt.)</label><input type="number" id="nPunkte" value="" min="0" max="15" placeholder="–"/></div>
+      <div class="field"><label>Punkte (0–15)</label><input type="number" id="nPunkte" placeholder="–" min="0" max="15"/></div>
     </div>
-    <div class="field"><label>Notiz</label><input type="text" id="nNotiz" placeholder="optional…"/></div>
+    <div class="field"><label>Notiz</label><input id="nNotiz" placeholder="optional"/></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-gold" onclick="saveGrade()">Speichern</button>
@@ -1257,96 +1223,157 @@ document.getElementById('addNoteBtn').addEventListener('click',()=>{
 });
 function saveGrade(){
   let note=parseFloat(document.getElementById('nNote').value)||3;
-  const punkte=document.getElementById('nPunkte').value;
-  if(punkte!=='')note=gradeFromPoints(parseInt(punkte));
+  const p=document.getElementById('nPunkte').value;
+  if(p!=='')note=gradeFromPts(parseInt(p));
   note=Math.max(1,Math.min(6,Math.round(note*10)/10));
   S.grades=(S.grades||[]);
   S.grades.push({fach:document.getElementById('nFach').value,typ:document.getElementById('nTyp').value,
     datum:document.getElementById('nDatum').value,note,
-    punkte:punkte!==''?parseInt(punkte):undefined,
-    notiz:document.getElementById('nNotiz').value.trim()});
+    punkte:p!==''?parseInt(p):undefined,notiz:(document.getElementById('nNotiz').value||'').trim()});
   save();closeModal();renderNoten();checkBadges();
 }
-window.saveGrade=saveGrade;window.deleteGrade=deleteGrade;
+window.saveGrade=saveGrade;window.delGrade=delGrade;
 
-// ============================================================
-// STATISTIK
-// ============================================================
+// ── FERNABI PLAN ───────────────────────────────────────────
+function renderFernabi(){
+  const fa=S.fernabi||{};
+  if(fa.start)document.getElementById('faStart').value=fa.start;
+  if(fa.end)document.getElementById('faEnd').value=fa.end;
+  updateFernabiDisplay();
+}
+function updateFernabiDisplay(){
+  const fa=S.fernabi||{};
+  if(!fa.start||!fa.end){
+    document.getElementById('faTageBis').textContent='–';
+    document.getElementById('faProzent').textContent='0%';
+    document.getElementById('faProgressFill').style.width='0%';
+    document.getElementById('faStartLbl').textContent='Startdatum setzen';
+    document.getElementById('faEndLbl').textContent='Zieldatum setzen';
+    document.getElementById('faPhasen').innerHTML='<div style="color:var(--text3);font-style:italic;font-size:13px">Bitte Start- und Enddatum setzen.</div>';
+    document.getElementById('faEmpfehlungen').innerHTML='Setze dein Fernabi-Start- und Zieldatum um personalisierte Tipps zu erhalten.';
+    return;
+  }
+  const now=new Date();now.setHours(0,0,0,0);
+  const start=new Date(fa.start);start.setHours(0,0,0,0);
+  const end=new Date(fa.end);end.setHours(0,0,0,0);
+  const total=Math.ceil((end-start)/86400000);
+  const elapsed=Math.max(0,Math.ceil((now-start)/86400000));
+  const remaining=Math.max(0,Math.ceil((end-now)/86400000));
+  const pct=total>0?Math.min(100,Math.round((elapsed/total)*100)):0;
+
+  document.getElementById('faTageBis').textContent=remaining>0?remaining+' Tage':'🎓 Fertig!';
+  document.getElementById('faProzent').textContent=pct+'%';
+  document.getElementById('faProgressFill').style.width=pct+'%';
+  document.getElementById('faStartLbl').textContent=start.toLocaleDateString('de-DE');
+  document.getElementById('faEndLbl').textContent=end.toLocaleDateString('de-DE');
+  document.getElementById('faNowLbl').textContent='Heute ('+pct+'%)';
+
+  // Phasen (Halbjahre)
+  const halfYears=Math.ceil(total/182);
+  let ph='';
+  for(let i=0;i<halfYears;i++){
+    const ps=new Date(start.getTime()+i*182*86400000);
+    const pe=new Date(Math.min(start.getTime()+(i+1)*182*86400000,end.getTime()));
+    const pDone=now>=pe;const pActive=now>=ps&&now<pe;
+    const col=pDone?'var(--green)':pActive?'var(--accent)':'var(--text4)';
+    const bg=pDone?'var(--green-bg)':pActive?'var(--accent-bg)':'var(--bg2)';
+    ph+=`<div style="display:flex;align-items:center;gap:12px;padding:9px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;background:${bg}">
+      <span style="font-size:18px">${pDone?'✅':pActive?'🔥':'📅'}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500;color:${col}">Halbjahr ${i+1}${pActive?' · Aktuell':''}</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--font-m)">${ps.toLocaleDateString('de-DE')} – ${pe.toLocaleDateString('de-DE')}</div>
+      </div>
+      ${pDone?'<span style="color:var(--green);font-size:13px;font-family:var(--font-m)">Abgeschlossen</span>':''}
+    </div>`;
+  }
+  document.getElementById('faPhasen').innerHTML=ph;
+
+  // Empfehlungen
+  const avgPerDay=S.sessions>0&&elapsed>0?Math.round((S.sessions/elapsed)*10)/10:0;
+  const needed=remaining>0?Math.ceil(S.cfg.blocks*remaining/remaining):S.cfg.blocks;
+  let emp=`<p style="margin-bottom:8px">📊 <strong>Dein Fortschritt:</strong> Du lernst im Schnitt <strong>${avgPerDay} Einheiten/Tag</strong>.</p>`;
+  if(remaining>0){
+    const projSessions=Math.round(avgPerDay*remaining);
+    emp+=`<p style="margin-bottom:8px">🎯 <strong>Hochrechnung:</strong> Bei gleichem Tempo absolvierst du noch ca. <strong>${projSessions} Einheiten</strong> bis zum Ziel.</p>`;
+  }
+  emp+=`<p style="margin-bottom:8px">⚡ <strong>Empfehlung:</strong> Plane ${S.cfg.blocks} Einheiten à ${S.cfg.learn} Min täglich. Das ergibt ${Math.round(S.cfg.blocks*S.cfg.learn/60*10)/10}h Lernzeit pro Tag.</p>`;
+  emp+=`<p>🔥 <strong>Streak-Tipp:</strong> Auch 1 Einheit täglich zählt für den Streak – Kontinuität schlägt Intensität!</p>`;
+  document.getElementById('faEmpfehlungen').innerHTML=emp;
+}
+document.getElementById('faSave').addEventListener('click',()=>{
+  const s=document.getElementById('faStart').value;
+  const e=document.getElementById('faEnd').value;
+  if(!s||!e){showToast('Bitte beide Daten ausfüllen','');return;}
+  S.fernabi={start:s,end:e};save();updateFernabiDisplay();
+  showToast('Fernabi-Plan gespeichert ✓','');
+});
+
+// ── STATISTIK ──────────────────────────────────────────────
 function renderStatistik(){
-  const totalHours=Math.round((S.sessions*S.cfg.learn)/60*10)/10;
+  const totalH=Math.round(S.sessions*S.cfg.learn/60*10)/10;
   document.getElementById('stSessions').textContent=S.sessions;
-  document.getElementById('stHours').textContent=totalHours+'h';
+  document.getElementById('stHours').textContent=totalH+'h';
   document.getElementById('stStreak').textContent=S.bestStreak||S.streak;
-  document.getElementById('stTokensEarned').textContent=S.tokens_earned||0;
-
-  // 7-day charts
+  document.getElementById('stTok').textContent=S.tokens_earned||0;
   const days7=[],sess7=[],xp7=[];
   for(let i=6;i>=0;i--){
     const d=new Date(Date.now()-i*86400000);
-    const key=d.toDateString();
-    const label=['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()];
-    days7.push(label);
-    const log=S.dailyLog[key]||{sessions:0,xp:0};
-    sess7.push(log.sessions||0);
-    xp7.push(log.xp||0);
+    days7.push(['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]);
+    const log=S.dailyLog[d.toDateString()]||{sessions:0,xp:0};
+    sess7.push(log.sessions||0);xp7.push(log.xp||0);
   }
-  renderMiniChart(document.getElementById('week7Chart'),days7,sess7,'var(--accent)');
-  renderMiniChart(document.getElementById('week7XPChart'),days7,xp7,'var(--gold)');
-
-  // Fach distribution
-  const fachCount={};
-  Object.entries(S.schedule).forEach(([,v])=>{if(v?.fach)fachCount[v.fach]=(fachCount[v.fach]||0)+1;});
+  miniChart(document.getElementById('chart7sess'),days7,sess7,'var(--accent)');
+  miniChart(document.getElementById('chart7xp'),days7,xp7,'var(--gold)');
+  // Fachverteilung
+  const fc={};
+  Object.values(S.schedule).forEach(v=>{if(v?.fach)fc[v.fach]=(fc[v.fach]||0)+1;});
   const fd=document.getElementById('fachDist');
-  if(!Object.keys(fachCount).length){fd.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:12px">Stundenplan befüllen für Auswertung</div>';}
+  if(!Object.keys(fc).length){fd.innerHTML='<div style="color:var(--text3);font-style:italic;font-size:12px">Stundenplan befüllen</div>';}
   else{
-    const total=Object.values(fachCount).reduce((a,b)=>a+b,0);
-    fd.innerHTML=Object.entries(fachCount).sort((a,b)=>b[1]-a[1]).map(([f,c])=>{
-      const pct=Math.round((c/total)*100);
-      return `<div style="margin-bottom:8px">
+    const tot=Object.values(fc).reduce((a,b)=>a+b,0);
+    fd.innerHTML=Object.entries(fc).sort((a,b)=>b[1]-a[1]).map(([f,c])=>{
+      const p=Math.round((c/tot)*100);
+      return`<div style="margin-bottom:7px">
         <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-          <span class="heft-fach-tag fach-${f}" style="padding:1px 7px;border-radius:99px;font-size:10px">${f}</span>
-          <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">${pct}%</span>
+          <span style="font-size:12px;color:var(--text2)">${f}</span>
+          <span style="font-family:var(--font-m);font-size:10px;color:var(--text3)">${p}%</span>
         </div>
-        <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
-          <div class="fach-bg-${f}" style="height:100%;width:${pct}%;border-radius:3px;transition:width .4s"></div>
+        <div style="height:5px;background:var(--bg3);border-radius:3px;overflow:hidden">
+          <div class="fbg-${f}" style="height:100%;width:${p}%;border-radius:3px;transition:width .4s"></div>
         </div>
       </div>`;
     }).join('');}
-
-  // 90-day continuity
-  const cg=document.getElementById('continuityGrid');cg.innerHTML='';
+  // 90-day grid
+  const cg=document.getElementById('contGrid');cg.innerHTML='';
   for(let i=89;i>=0;i--){
     const d=new Date(Date.now()-i*86400000);
-    const key=d.toDateString();
-    const learned=(S.dailyLog[key]?.sessions||0)>0;
+    const learned=(S.dailyLog[d.toDateString()]?.sessions||0)>0;
     const dot=document.createElement('div');
-    dot.style.cssText=`width:10px;height:10px;border-radius:2px;background:${learned?'var(--green)':'var(--bg4)'};border:1px solid var(--border)`;
+    dot.className='cont-dot';
+    dot.style.background=learned?'var(--green)':'var(--bg3)';
+    dot.style.border='1px solid var(--border)';
     dot.title=d.toLocaleDateString('de-DE');
     cg.appendChild(dot);
   }
 }
-
-function renderMiniChart(container,labels,values,color){
+function miniChart(container,labels,values,color){
   const max=Math.max(...values,1);
-  container.innerHTML=`
-    <div class="mini-bar-wrap">
-      ${values.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center">
-        <div style="height:60px;display:flex;align-items:flex-end;width:100%">
-          <div style="width:100%;height:${Math.round((v/max)*56)+2}px;background:${color};border-radius:3px 3px 0 0;opacity:.75;min-height:2px"></div>
-        </div>
-        <div class="mini-bar-label">${labels[i]}</div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${v||''}</div>
-      </div>`).join('')}
-    </div>`;
+  container.innerHTML=`<div class="mbc">
+    ${values.map((v,i)=>`<div class="mbc-col">
+      <div style="height:64px;display:flex;align-items:flex-end;width:100%">
+        <div class="mbc-bar" style="height:${Math.round((v/max)*58)+2}px;background:${color};opacity:.75"></div>
+      </div>
+      <div class="mbc-lbl">${labels[i]}</div>
+      <div style="font-size:9px;color:var(--text3);font-family:var(--font-m)">${v||''}</div>
+    </div>`).join('')}
+  </div>`;
 }
 
-// ============================================================
-// XP PAGE
-// ============================================================
+// ── XP PAGE ────────────────────────────────────────────────
 function renderXPPage(){
   const lv=getLevel(S.xp),next=getNextLevel(S.xp);
   document.getElementById('xpTotal').textContent=S.xp;
-  document.getElementById('xpLevel').textContent=lv.level;
+  document.getElementById('xpLvl').textContent=lv.level;
   document.getElementById('xpTitle').textContent=`${lv.emoji} ${lv.title}`;
   if(next){
     const pct=Math.round(((S.xp-lv.xp)/(next.xp-lv.xp))*100);
@@ -1354,67 +1381,63 @@ function renderXPPage(){
     document.getElementById('xpNext').textContent=`Noch ${next.xp-S.xp} XP bis ${next.emoji} ${next.title}`;
   } else {
     document.getElementById('xpFillBig').style.width='100%';
-    document.getElementById('xpNext').textContent='Maximales Level erreicht 👑';
+    document.getElementById('xpNext').textContent='Maximales Level – Abi-Shogun 👑';
   }
   const path=document.getElementById('levelPath');path.innerHTML='';
   LEVELS.forEach(l=>{
     const reached=S.xp>=l.xp,cur=getLevel(S.xp).level===l.level;
     const div=document.createElement('div');
-    div.className='level-row '+(reached?'reached':'locked')+(cur?' current-level':'');
-    div.innerHTML=`<span style="font-size:20px">${l.emoji}</span>
-      <div style="flex:1"><div class="lv-title" style="font-size:13px;color:${cur?'var(--accent)':reached?'var(--text)':'var(--text3)'}">${l.title} ${cur?'← Du':''}</div>
-      <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">Level ${l.level} · ${l.xp.toLocaleString()} XP</div></div>
-      ${reached?'<span style="color:var(--green);font-size:14px">✓</span>':''}`;
+    div.className='lv-row'+(reached?'':' locked');
+    div.innerHTML=`<span style="font-size:18px">${l.emoji}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:${cur?'600':'400'};color:${cur?'var(--accent)':reached?'var(--text)':'var(--text3)'}">${l.title}${cur?' ← Du':''}</div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--font-m)">Level ${l.level} · ${l.xp.toLocaleString()} XP</div>
+      </div>
+      ${reached?'<span style="color:var(--green);font-size:13px">✓</span>':''}`;
     path.appendChild(div);
   });
 }
 
-// ============================================================
-// BADGES
-// ============================================================
+// ── BADGES ─────────────────────────────────────────────────
 function renderBadges(){
   const g=document.getElementById('badgesGrid');if(!g)return;g.innerHTML='';
-  const count=S.badges_unlocked.length;
-  document.getElementById('badgesUnlocked').textContent=`${count} / ${BADGES.length} freigeschaltet`;
+  document.getElementById('badgeCount').textContent=`${S.badges_unlocked.length} / ${BADGES.length} freigeschaltet`;
   BADGES.forEach(b=>{
-    const unlocked=S.badges_unlocked.includes(b.id);
-    const div=document.createElement('div');div.className='badge-card '+(unlocked?'unlocked':'locked');
+    const u=S.badges_unlocked.includes(b.id);
+    const div=document.createElement('div');div.className='badge '+(u?'unlocked':'locked');
     div.innerHTML=`<div class="badge-icon">${b.emoji}</div><div class="badge-name">${b.name}</div><div class="badge-req">${b.desc}</div>`;
     g.appendChild(div);
   });
 }
 
-// ============================================================
-// BELOHNUNGEN / TOKENS
-// ============================================================
+// ── TOKENS ─────────────────────────────────────────────────
 function renderTokens(){
-  document.getElementById('tokBalance').textContent=S.tokens;
+  document.getElementById('tokBal').textContent=S.tokens;
   const list=document.getElementById('rewardsList');list.innerHTML='';
   S.rewards.forEach((r,i)=>{
-    const canAfford=S.tokens>=r.cost;
-    const div=document.createElement('div');div.className='reward-item';
+    const ok=S.tokens>=r.cost;
+    const div=document.createElement('div');div.className='reward';
     div.innerHTML=`<div class="reward-cost">🪙${r.cost}</div>
       <div style="flex:1"><div class="reward-name">${r.name}</div><div class="reward-desc">${r.desc}</div></div>
       <div style="display:flex;gap:6px">
-        <button class="btn btn-sm ${canAfford?'btn-gold':''}" ${canAfford?'':'disabled style="opacity:.35;cursor:not-allowed"'} onclick="redeemReward(${i})">Einlösen</button>
-        <button class="btn btn-sm btn-red" onclick="deleteReward(${i})">✕</button>
+        <button class="btn btn-sm ${ok?'btn-gold':''}" ${ok?'':'disabled'} onclick="redeemReward(${i})">Einlösen</button>
+        <button class="btn btn-sm btn-red" onclick="delReward(${i})">✕</button>
       </div>`;
     list.appendChild(div);
   });
 }
 function redeemReward(i){
   const r=S.rewards[i];
-  if(S.tokens<r.cost){showToast('Nicht genug Token 💪','Mehr lernen und Tokens sammeln!');return;}
+  if(S.tokens<r.cost){showToast('Nicht genug Token','Mehr lernen!');return;}
   if(confirm(`"${r.name}" für ${r.cost} Token einlösen?`)){
-    S.tokens-=r.cost;save();renderTokens();updateTopBar();
-    showToast(`Eingelöst! 🎉`,`Genieße: ${r.name}`);
+    S.tokens-=r.cost;save();renderTokens();updateTopBar();showToast('Eingelöst! 🎉',`Genieße: ${r.name}`);
   }
 }
-function deleteReward(i){if(confirm('Belohnung löschen?')){S.rewards.splice(i,1);save();renderTokens();}}
+function delReward(i){if(confirm('Belohnung löschen?')){S.rewards.splice(i,1);save();renderTokens();}}
 document.getElementById('addRewardBtn').addEventListener('click',()=>{
   showModal(`<div class="modal-title">Neue Belohnung</div>
-    <div class="field"><label>Name</label><input type="text" id="rName" placeholder="z.B. Freier Nachmittag"/></div>
-    <div class="field"><label>Beschreibung</label><input type="text" id="rDesc" placeholder="Was genau bekommst du?"/></div>
+    <div class="field"><label>Name</label><input id="rName" placeholder="z.B. Freier Nachmittag"/></div>
+    <div class="field"><label>Beschreibung</label><input id="rDesc" placeholder="Was bekommst du?"/></div>
     <div class="field"><label>Token-Kosten</label><input type="number" id="rCost" value="15" min="1"/></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Abbrechen</button>
@@ -1426,52 +1449,54 @@ function saveReward(){
     desc:document.getElementById('rDesc').value.trim(),cost:parseInt(document.getElementById('rCost').value)||15});
   save();closeModal();renderTokens();
 }
+window.redeemReward=redeemReward;window.delReward=delReward;window.saveReward=saveReward;
 
-// ============================================================
-// SETUP
-// ============================================================
-document.getElementById('saveSetup').addEventListener('click',()=>{
-  S.cfg.startH=parseInt(document.getElementById('cfgStartH').value)||4;
-  S.cfg.startM=parseInt(document.getElementById('cfgStartM').value)||0;
-  S.cfg.blocks=parseInt(document.getElementById('cfgBlocks').value)||4;
-  S.cfg.learn=parseInt(document.getElementById('cfgLearn').value)||90;
-  S.cfg.pause=parseInt(document.getElementById('cfgPause').value)||15;
-  save();buildTimerBlocks();loadTimerBlock(0);renderTimetable();
-  showToast('Einstellungen gespeichert ✓','');
-});
-function loadSetupValues(){
-  document.getElementById('cfgStartH').value=S.cfg.startH;
-  document.getElementById('cfgStartM').value=S.cfg.startM;
-  document.getElementById('cfgBlocks').value=S.cfg.blocks;
+// ── SETUP ──────────────────────────────────────────────────
+function loadSetup(){
+  document.getElementById('cfgSH').value=S.cfg.startH;
+  document.getElementById('cfgSM').value=S.cfg.startM;
+  document.getElementById('cfgBlk').value=S.cfg.blocks;
   document.getElementById('cfgLearn').value=S.cfg.learn;
   document.getElementById('cfgPause').value=S.cfg.pause;
 }
+document.getElementById('saveSetup').addEventListener('click',()=>{
+  S.cfg.startH=parseInt(document.getElementById('cfgSH').value)||4;
+  S.cfg.startM=parseInt(document.getElementById('cfgSM').value)||0;
+  S.cfg.blocks=parseInt(document.getElementById('cfgBlk').value)||4;
+  S.cfg.learn=parseInt(document.getElementById('cfgLearn').value)||90;
+  S.cfg.pause=parseInt(document.getElementById('cfgPause').value)||15;
+  save();buildBlocks();loadBlock(0);renderTimetable();
+  showToast('Einstellungen gespeichert ✓','');
+});
 document.getElementById('exportBtn').addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='abidojo_backup.json';a.click();
 });
+document.getElementById('importFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(confirm('Import überschreibt alle Daten. Fortfahren?')){
+        S=d;save();location.reload();
+      }
+    }catch{showToast('Import fehlgeschlagen','Ungültige Datei');}
+  };r.readAsText(f);
+});
 document.getElementById('resetAllBtn').addEventListener('click',()=>{
   if(confirm('Wirklich alles zurücksetzen? Alle Daten gehen verloren!')){
-    localStorage.removeItem('abidojo_v3');S=defaultState();save();location.reload();
+    localStorage.removeItem('abidojo_v4');S=defaultState();save();location.reload();
   }
 });
 
-// ============================================================
-// MODAL
-// ============================================================
+// ── MODAL ──────────────────────────────────────────────────
 function showModal(html){document.getElementById('modalBox').innerHTML=html;document.getElementById('modalBg').style.display='flex';}
 function closeModal(){document.getElementById('modalBg').style.display='none';}
-document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===document.getElementById('modalBg'))closeModal();});
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal();});
+window.closeModal=closeModal;window.saveSlot=saveSlot;
 
-// Export globals
-window.closeModal=closeModal;window.saveSlot=saveSlot;window.saveHeft=saveHeft;
-window.logHeftSession=logHeftSession;window.openLogSession=openLogSession;window.deleteHeft=deleteHeft;
-window.redeemReward=redeemReward;window.deleteReward=deleteReward;window.saveReward=saveReward;
-window.saveCalEvent=saveCalEvent;
-
-// ============================================================
-// NAVIGATION
-// ============================================================
+// ── NAVIGATION ─────────────────────────────────────────────
 document.querySelectorAll('.nav-item[data-page]').forEach(el=>{
   el.addEventListener('click',()=>{
     document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
@@ -1483,33 +1508,31 @@ document.querySelectorAll('.nav-item[data-page]').forEach(el=>{
     if(p==='badges')renderBadges();
     if(p==='tokens')renderTokens();
     if(p==='hefte')renderHefte();
-    if(p==='setup')loadSetupValues();
+    if(p==='setup')loadSetup();
     if(p==='statistik')renderStatistik();
     if(p==='noten')renderNoten();
     if(p==='kalender')renderCalendar();
-    if(p==='stundenplan')renderESAMini();
+    if(p==='stundenplan'){renderTimetable();renderESAMini();}
+    if(p==='fernabi')renderFernabi();
   });
 });
 
-// ============================================================
-// INIT
-// ============================================================
-checkStreakDecay();
+// ── INIT ───────────────────────────────────────────────────
+checkStreakUI();
 updateTopBar();
 renderTimetable();
 renderESAMini();
-buildTimerBlocks();
-loadTimerBlock(0);
+buildBlocks();
+loadBlock(0);
 renderHefte();
 renderBadges();
 renderTokens();
-loadSetupValues();
+loadSetup();
 checkBadges();
 renderCalendar();
 renderNoten();
 
-// Realtime streak check every minute
-setInterval(()=>{checkStreakDecay();updateTopBar();}, 60000);
+setInterval(()=>{checkStreakUI();updateTopBar();},60000);
 </script>
 </body>
 </html>
